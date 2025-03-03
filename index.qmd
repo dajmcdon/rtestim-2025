@@ -1,0 +1,32 @@
+---
+talk-title: "An elaborate title for your talk"
+talk-short-title: "A shorter title"
+author: "Daniel J. McDonald"
+repo-address: "dajmcdon/talk-template"
+format: revealjs
+---
+
+{{< include _setup.qmd >}}
+
+## {background-image="gfx/cover-art-1.svg"}
+
+<!-- This is the title slide. The cover art is created in `_setup.qmd` -->
+<!-- Make changes to the styling to adjust for different graphics -->
+
+::: {style="text-align:center; font-family:Gilda Display; font-size:1.8em; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .5); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);"}
+[{{< meta talk-title >}}]{.primary} 
+
+<br>
+
+[{{< meta author >}}]{.primary}
+
+<!-- Also generated in `_setup.qmd` -->
+![](gfx/qrcodes-1.png){height="300px" fig-align="center"}
+:::
+
+## Empty slide 1
+
+## Final slide
+
+[Yipee!!]{.r-fit-text}
+

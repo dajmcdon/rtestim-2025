@@ -1,0 +1,82 @@
+
+```{r setup}
+#| include: false
+# These colours match those in `themer.scss`
+primary <- "#002145"
+secondary <- "#6495ed"
+tertiary <- "#ffa319"
+fourth_colour <- "#a41623"
+theme_white <- "#f3f6ff"
+theme_black <- "#00162e"
+my_url <- "https://dajmcdon.github.io"
+paper_url <- "http://github.com/dajmcdon/talk-template/"
+slides_url <- "https://dajmcdon.github.io/talk-template/"
+suppressMessages(library(tidyverse))
+theme_set(
+  theme_bw() +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      legend.key = element_blank()
+    )
+)
+```
+
+```{r, dev.args=list(bg=primary)}
+#| include: false
+#| label: cover-art
+#| fig-width: 8
+#| fig-height: 4.5
+#| cache: true
+# make 50 normal densities and color them brightly
+# Just an example, do something meaningful
+n <- 50
+m <- runif(n, -.5, .5)
+s <- runif(n, .75, 1.25)
+x <- seq(-4, 1, length.out = 201)
+d <- map2(m, s, \(mm, ss) tibble(x = x, y = dnorm(x, mm, ss))) |>
+  list_rbind(names_to = "name")
+
+ggplot(d, aes(x, y)) +
+  geom_line(aes(color = name, group = name)) +
+  coord_cartesian(xlim = c(-4, 1), ylim = c(-.025, dnorm(0))) +
+  scale_x_continuous(expand = expansion()) +
+  scale_y_continuous(expand = expansion()) +
+  theme_void() +
+  scale_color_distiller(palette = "Set1", direction = 1) +
+  theme(legend.position = "none")
+```
+
+
+```{r}
+#| include: false
+#| label: qrcodes
+#| fig-width: 8
+#| fig-height: 4
+#| dev: "png"
+#| cache: true
+qrdat <- function(text, ecl = c("L", "M", "Q", "H")) {
+  x <- qrcode::qr_code(text, ecl)
+  n <- nrow(x)
+  s <- seq_len(n)
+  tib <- tidyr::expand_grid(x = s, y = rev(s))
+  tib$z <- c(x)
+  tib
+}
+
+allqr <- bind_rows(
+  slides = qrdat(slides_url),
+  paper = qrdat(paper_url),
+  `my www` = qrdat(my_url, "Q"), .id = "site"
+)
+
+ggplot(allqr, aes(x, y, fill = z, alpha = z)) +
+  geom_raster() +
+  coord_equal(expand = FALSE) +
+  scale_fill_manual(values = c(theme_white, primary), guide = "none") +
+  scale_alpha_manual(values = c(0, 1), guide = "none") +
+  theme_void() +
+  facet_wrap(~site, nrow = 1) +
+  theme(text = element_text(color = primary, size = 36, margin = margin(3, 0, 3, 0)))
+```
+

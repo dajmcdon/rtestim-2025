@@ -1,0 +1,113 @@
+/*-- scss:defaults --*/
+
+// import google fonts
+@import url('https://fonts.googleapis.com/css2?family=Gilda+Display&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
+
+$light-colors: (
+  "ubclblue": #6495ed,
+  "orange": #FFa319,
+  "brown": #a15e49,
+  "teal": lighten(#17bebb, 20%),
+  "green": #06D6a0,
+  "pink": #FBCAEF,
+  "white": #f3f6ff, // slight amount of blue/green to match the primary colour
+);
+
+$dark-colors: (
+  "black": #00162e, // darker version of primary
+  "ubcblue": #002145,
+  "claret": #a41623
+);
+
+$colors: map-merge($light-colors, $dark-colors);
+
+@function theme-color($color) {
+  @return map-get($colors, $color);
+}
+
+$primary: theme-color("ubcblue");
+$secondary: theme-color("ubclblue");
+$tertiary: theme-color("orange");
+$font-family-sans-serif: 'Red Hat Display', sans-serif;
+$presentation-heading-font: 'Gilda Display', serif;
+// $presentation-font-size-root: 40px;
+$body-bg: theme-color("white");
+$body-color: theme-color("black"); // darker version of primary
+$presentation-heading-color: lighten($primary, 10%);
+$presentation-font-size-root: 36px;
+
+$link-color: lighten($primary, 10%);
+
+
+/*-- scss:rules --*/
+
+
+@each $name, $color in $colors {
+  .reveal .slides section .fragment.hl-#{$name} {
+    opacity: unset;
+    visibility: unset;
+
+    &.visible {
+      background-color: lighten($color, 10%);
+    }
+
+    &.current-fragment {
+      background-color: $color;
+    }
+  }
+  .#{$name} {
+    color: $color;
+  }
+}
+
+@each $name, $color in $dark-colors {
+  .reveal .slides section .fragment.hl-#{$name} {
+    &.visible { color: $body-bg; }
+    &.current-fragment { color: $body-bg; }
+  }
+}
+
+
+.primary {color: $primary;}
+.secondary {color: $secondary;}
+.tertiary {color: $tertiary;}
+
+
+.inverse {
+  color: $body-bg;
+  .slide-background-content {
+    background-color: $primary;
+  }
+  h1, h2, h3 {
+    color: $body-bg;
+  }
+
+  a {
+    color: $body-bg;
+  }
+}
+
+.box-text {
+  font-size: 1.2em;
+  background-color: $body-bg;
+  border: 5px;
+  border-style: solid;
+  border-color: theme-color("claret");
+  padding: 3em;
+}
+
+
+ul {
+ 	list-style: none; /* Remove default bullets */
+}
+
+ol li::marker {color: lighten($primary, 10%);}
+
+ul li::marker {
+	color: lighten($primary, 10%);
+}
+
+dt {
+  color: lighten($primary, 10%);
+}
+
