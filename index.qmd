@@ -1,9 +1,11 @@
 ---
-talk-title: "An elaborate title for your talk"
-talk-short-title: "A shorter title"
+talk-title: "Nonparametric estimation of time-varying reproduction numbers"
+talk-short-title: "[{rtestim}]{.monotype}"
 author: "Daniel J. McDonald"
-repo-address: "dajmcdon/talk-template"
-format: revealjs
+repo-address: "dajmcdon/rtestim-2025"
+format: 
+  revealjs:
+    include-in-header: "src/infections.js"
 ---
 
 {{< include _setup.qmd >}}
@@ -24,7 +26,68 @@ format: revealjs
 ![](gfx/qrcodes-1.png){height="300px" fig-align="center"}
 :::
 
-## Empty slide 1
+## Mathematical modelling of disease / epidemics is very old 
+
+* [Daniel Bernoulli (1760)]{.tertiary} - studies inoculation against smallpox
+
+* [John Snow (1855)]{.tertiary} - cholera epidemic in London tied to a water pump
+
+* [Ronald Ross (1902)]{.tertiary} - Nobel Prize in Medicine for work on malaria
+
+* [Kermack and McKendrick (1927-1933)]{.tertiary} - basic epidemic (mathematical) model
+
+![Shiode, et al. "The mortality rates and the space-time patterns of John Snow’s cholera epidemic map." _Int J Health Geogr_ *14*, 21 (2015). ](https://media.springernature.com/full/springer-static/image/art%3A10.1186%2Fs12942-015-0011-y/MediaObjects/12942_2015_11_Fig1_HTML.gif?as=webp){height=400px fig-align="center"}
+
+
+## $R_0$ basic reproduction number
+
+Dates at least to [Alfred Lotka (1920s)]{.tertiary}
+
+"How many secondary infections will each primary infection cause?"
+
+::: {.fragment .absolute top=300 left=300}
+
+![Guerra, et al. "The basic reproduction number (R0) of measles: a systematic review" (2019)](https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg){height=400}
+
+:::
+
+::: {.fragment .absolute top=300 left=300}
+
+![Katelyn Jetelina, "YLE Newsletter" 3 March 2025](gfx/yle-measles.jpg){height=500}
+
+:::
+
+## $R_0$ is entirely retrospective
+
+* Let $\eta(a)$ be the rate of reproduction of an infection of age $a$
+
+* Then $R_0$ is defined (mathematically) to be
+
+$$
+R_0 = \int_0^\infty \eta(a)\mathsf{d}a
+$$
+
+* To calculate something like this from data, the "bonehead" way is to 
+  1. Wait until the epidemic is over (no more infections circulating)
+  2. Contact trace the primary infection responsible for each secondary infection
+  3. Take a sample average of the number caused by each primary
+  
+::: {.fragment .box-text .absolute top=300 left=300}
+
+Of course no one actually does that
+
+Lots of work on how to estimate this
+
+:::
+
+
+---
+
+<input type="button" value="Animate Julia Set" onclick="init()"/>
+<canvas id="simulation" width="800" height="600"></canvas>
+
+
+
 
 ## Final slide
 

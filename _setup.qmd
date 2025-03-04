@@ -6,11 +6,11 @@ primary <- "#002145"
 secondary <- "#6495ed"
 tertiary <- "#ffa319"
 fourth_colour <- "#a41623"
-theme_white <- "#f3f6ff"
+theme_white <- "#fbfcff"
 theme_black <- "#00162e"
 my_url <- "https://dajmcdon.github.io"
-paper_url <- "http://github.com/dajmcdon/talk-template/"
-slides_url <- "https://dajmcdon.github.io/talk-template/"
+paper_url <- "https://doi.org/10.1371/journal.pcbi.1012324"
+slides_url <- "https://dajmcdon.github.io/rtestim-2025"
 suppressMessages(library(tidyverse))
 theme_set(
   theme_bw() +
@@ -28,18 +28,17 @@ theme_set(
 #| fig-width: 8
 #| fig-height: 4.5
 #| cache: true
-# make 50 normal densities and color them brightly
-# Just an example, do something meaningful
-n <- 50
-m <- runif(n, -.5, .5)
-s <- runif(n, .75, 1.25)
-x <- seq(-4, 1, length.out = 201)
-d <- map2(m, s, \(mm, ss) tibble(x = x, y = dnorm(x, mm, ss))) |>
-  list_rbind(names_to = "name")
+library(rtestim)
+rto <- estimate_rt(cancovid$incident_cases, x = cancovid$date)         
+Rt <- rto$Rt
+colnames(Rt) <- as.character(1:ncol(Rt))
+Rt <- pivot_longer(as_tibble(Rt) |> mutate(x = cancovid$date), -x) |>
+  arrange(name, x)
 
-ggplot(d, aes(x, y)) +
-  geom_line(aes(color = name, group = name)) +
-  coord_cartesian(xlim = c(-4, 1), ylim = c(-.025, dnorm(0))) +
+Rt |>
+  ggplot(aes(x, value, colour = as.numeric(name), group = name)) +
+  geom_line() +
+  coord_cartesian(ylim = c(0.8, 1.5), xlim = c(ymd("2021-08-01", "2022-08-31"))) +
   scale_x_continuous(expand = expansion()) +
   scale_y_continuous(expand = expansion()) +
   theme_void() +
@@ -67,8 +66,11 @@ qrdat <- function(text, ecl = c("L", "M", "Q", "H")) {
 allqr <- bind_rows(
   slides = qrdat(slides_url),
   paper = qrdat(paper_url),
-  `my www` = qrdat(my_url, "Q"), .id = "site"
-)
+  `my www` = qrdat(my_url, "Q"), 
+  `{rtestim}` = qrdat("https://dajmcdon.github.io/rtestim"),
+  .id = "site"
+) |>
+  mutate(site = as.factor(site) |> fct_relevel("{rtestim}", after = 2))
 
 ggplot(allqr, aes(x, y, fill = z, alpha = z)) +
   geom_raster() +
@@ -76,7 +78,7 @@ ggplot(allqr, aes(x, y, fill = z, alpha = z)) +
   scale_fill_manual(values = c(theme_white, primary), guide = "none") +
   scale_alpha_manual(values = c(0, 1), guide = "none") +
   theme_void() +
-  facet_wrap(~site, nrow = 1) +
+  facet_wrap(~ site, nrow = 1) +
   theme(text = element_text(color = primary, size = 36, margin = margin(3, 0, 3, 0)))
 ```
 

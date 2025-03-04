@@ -10,7 +10,7 @@ $light-colors: (
   "teal": lighten(#17bebb, 20%),
   "green": #06D6a0,
   "pink": #FBCAEF,
-  "white": #f3f6ff, // slight amount of blue/green to match the primary colour
+  "white": #fbfcff, // full blue, bit less green and red to match the primary colour
 );
 
 $dark-colors: (
@@ -36,11 +36,15 @@ $body-color: theme-color("black"); // darker version of primary
 $presentation-heading-color: lighten($primary, 10%);
 $presentation-font-size-root: 36px;
 
-$link-color: lighten($primary, 10%);
+$link-color: theme-color("claret"); // lighten($primary, 10%);
+$text-muted: theme-color("claret");
 
 
 /*-- scss:rules --*/
 
+.monotype {
+  font-family: $font-family-monospace;
+}
 
 @each $name, $color in $colors {
   .reveal .slides section .fragment.hl-#{$name} {
@@ -58,6 +62,10 @@ $link-color: lighten($primary, 10%);
   .#{$name} {
     color: $color;
   }
+}
+
+.reveal .slide figure>figcaption {
+  color: #6c7888;
 }
 
 @each $name, $color in $dark-colors {
@@ -88,6 +96,7 @@ $link-color: lighten($primary, 10%);
 }
 
 .box-text {
+  color: theme-color("black");
   font-size: 1.2em;
   background-color: $body-bg;
   border: 5px;
