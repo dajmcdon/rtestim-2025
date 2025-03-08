@@ -29,7 +29,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-50a9766c65d55acb33793dd5384345b9.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-6563a0bbff37ab131af97ef55c3ab1d1.css">
   <link rel="stylesheet" href="styling/tachyons-minimal.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -122,97 +122,6 @@
       margin-right: 0; 
     }
   </style>
-  <script>
-  function init () {
-  const canvas = document.getElementById("simulation");
-  const ctx = canvas.getContext("2d");
-
-  const BALL_COUNT = 20;
-  const BALL_RADIUS = 15;
-  const SPEED = 2;
-  let balls = [];
-
-  class Ball {
-    constructor(x, y, color, generation = 0) {
-      this.x = x;
-      this.y = y;
-      this.color = color;
-      this.generation = generation;
-      this.dx = (Math.random() * 2 - 1) * SPEED;
-      this.dy = (Math.random() * 2 - 1) * SPEED;
-    }
-
-    move() {
-      this.x += this.dx;
-      this.y += this.dy;
-
-      if (this.x - BALL_RADIUS < 0 || this.x + BALL_RADIUS > canvas.width) {
-        this.dx *= -1;
-      }
-      if (this.y - BALL_RADIUS < 0 || this.y + BALL_RADIUS > canvas.height) {
-        this.dy *= -1;
-      }
-    }
-
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, BALL_RADIUS, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-      ctx.closePath();
-    }
-
-    isTouching(other) {
-      const dist = Math.hypot(this.x - other.x, this.y - other.y);
-      return dist < BALL_RADIUS * 2;
-    }
-
-    lightenColor() {
-      const redValue = Math.min(255, 100 + this.generation * 40);
-      return `rgb(${redValue}, 0, 0)`;
-    }
-  }
-
-  function allInfected() {
-    return balls.every(ball => ball.color.startsWith("rgb("));
-  }
-
-  function reset() {
-    balls = [];
-    init();
-  }
-
-  function init() {
-  }
-
-  function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    balls.forEach((ball, index) => {
-      ball.move();
-      ball.draw();
-      balls.forEach((other, otherIndex) => {
-        if (index !== otherIndex && ball.isTouching(other) && ball.color.startsWith("rgb(") && other.color === "blue") {
-          other.generation = ball.generation + 1;
-          other.color = other.lightenColor();
-        }
-      });
-    });
-
-    if (allInfected()) {
-      setTimeout(reset, 2000);
-    } else {
-      requestAnimationFrame(update);
-    }
-  }
-
-  balls.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, "rgb(100, 0, 0)", 0));
-    for (let i = 1; i < BALL_COUNT; i++) {
-      balls.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, "blue"));
-    }
-    requestAnimationFrame(update);
-  }
-  </script>
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -221,13 +130,10 @@
 
 <section id="section" class="slide level2" data-background-image="gfx/cover-art-1.svg">
 <h2></h2>
-<!-- This is the title slide. The cover art is created in `_setup.qmd` -->
-<!-- Make changes to the styling to adjust for different graphics -->
 <div style="text-align:center; font-family:Gilda Display; font-size:1.8em; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .5); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);">
 <p><span class="primary">Nonparametric estimation of time-varying reproduction numbers</span></p>
 <p><br></p>
 <p><span class="primary">Daniel J. McDonald</span></p>
-<!-- Also generated in `_setup.qmd` -->
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="gfx/qrcodes-1.png" class="quarto-figure quarto-figure-center" height="300"></p>
@@ -246,27 +152,27 @@
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="https://media.springernature.com/full/springer-static/image/art%3A10.1186%2Fs12942-015-0011-y/MediaObjects/12942_2015_11_Fig1_HTML.gif?as=webp" height="400"></p>
-<figcaption>Shiode, et al.&nbsp;“The mortality rates and the space-time patterns of John Snow’s cholera epidemic map.” <em>Int J Health Geogr</em> <em>14</em>, 21 (2015).</figcaption>
+<figcaption>Source: Shiode, et al., “The mortality rates and the space-time patterns of John Snow’s cholera epidemic map,” (2015)</figcaption>
 </figure>
 </div>
 </section>
 <section id="r_0-basic-reproduction-number" class="slide level2">
 <h2><span class="math inline">\(R_0\)</span> basic reproduction number</h2>
-<p>Dates at least to <span class="tertiary">Alfred Lotka (1920s)</span></p>
-<p>“How many secondary infections will each primary infection cause?”</p>
-<div class="fragment absolute" style="top: 300px; left: 300px; ">
+<p>Dates at least to <span class="tertiary">Alfred Lotka (1920s)</span> and others (Feller, Blackwell, etc.)</p>
+<p><br></p>
+<blockquote>
+<p>The expected number of secondary infections due to a primary infection</p>
+</blockquote>
+<p><br><br></p>
+<ul>
+<li><span class="math inline">\(R_0 &lt; 1\)</span> means that the epidemic will die out</li>
+<li><span class="math inline">\(R_0 &gt; 1\)</span> means that the epidemic will grow until everyone is infected</li>
+</ul>
+<div class="fragment box-text absolute" style="top: 50px; left: 150px; ">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg" height="400"></p>
-<figcaption>Guerra, et al.&nbsp;“The basic reproduction number (R0) of measles: a systematic review” (2019)</figcaption>
-</figure>
-</div>
-</div>
-<div class="fragment absolute" style="top: 300px; left: 300px; ">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="gfx/yle-measles.jpg" height="500"></p>
-<figcaption>Katelyn Jetelina, “YLE Newsletter” 3 March 2025</figcaption>
+<p><img data-src="gfx/yle-measles.jpg" height="600"></p>
+<figcaption>Source: Katelyn Jetelina, “YLE Newsletter,” 3 March 2025.</figcaption>
 </figure>
 </div>
 </div>
@@ -274,36 +180,560 @@
 <section id="r_0-is-entirely-retrospective" class="slide level2">
 <h2><span class="math inline">\(R_0\)</span> is entirely retrospective</h2>
 <ul>
-<li><p>Let <span class="math inline">\(\eta(a)\)</span> be the rate of reproduction of an infection of age <span class="math inline">\(a\)</span></p></li>
-<li><p>Then <span class="math inline">\(R_0\)</span> is defined (mathematically) to be</p></li>
-</ul>
-<p><span class="math display">\[
-R_0 = \int_0^\infty \eta(a)\mathsf{d}a
-\]</span></p>
-<ul>
-<li>To calculate something like this from data, the “bonehead” way is to
+<li><p>It’s a property of the pathogen in a fully susceptible (infinite) population</p></li>
+<li><p>Each outbreak is like a new sample</p></li>
+<li><p>To estimate something like this from data, the “bonehead” way is to</p>
 <ol type="1">
 <li>Wait until the epidemic is over (no more infections circulating)</li>
 <li>Contact trace the primary infection responsible for each secondary infection</li>
 <li>Take a sample average of the number caused by each primary</li>
+<li>Possibly repeat over many outbreaks</li>
 </ol></li>
 </ul>
+<div class="fragment box-text absolute" style="top: 50px; left: 100px; ">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg" height="500"></p>
+<figcaption>Source: Guerra, et al., “The basic reproduction number (R0) of measles,” (2019).</figcaption>
+</figure>
+</div>
+</div>
 <div class="fragment box-text absolute" style="top: 300px; left: 300px; ">
 <p>Of course no one actually does that</p>
-<p>Lots of work on how to estimate this</p>
+<p><br></p>
+<p>Lots of work on how to estimate <span class="math inline">\(R_0\)</span></p>
+</div>
+</section>
+<section id="effective-reproduction-number" class="slide level2">
+<h2>Effective reproduction number</h2>
+<p>Suppose <span class="math inline">\(s\)</span>% of the population is susceptible</p>
+<p>Then, “the” effective reproduction number <span class="math inline">\(R=sR_0\)</span></p>
+<p>Allows you to reason about things like</p>
+<p><br></p>
+<blockquote>
+<p>The level of vaccine coverage necessary to prevent an outbreak from growing uncontrollably.</p>
+</blockquote>
+<p><br></p>
+<div class="fragment">
+<p>So, for measles, if <span class="math inline">\(R_0\approx 15\)</span>, the disease will die out if immunity is</p>
+<p><span class="math display">\[
+sR_0 \leq 1 \Longrightarrow 1-s \leq 1-1/R_0 \approx 93\%
+\]</span></p>
 </div>
 </section>
 <section class="slide level2">
 
-<input type="button" value="Animate Julia Set" onclick="init()">
-<canvas id="simulation" width="800" height="600">
-</canvas>
+<iframe data-src="https://epiengage-measles.tacc.utexas.edu" height="850" width="1500">
+</iframe>
 </section>
+<section id="rt-instantaneous-reproduction-number" class="slide level2">
+<h2><span class="math inline">\(R(t)\)</span> — instantaneous reproduction number</h2>
+<ul>
+<li><p>The effective reproduction number in the middle of an outbreak</p></li>
+<li><p>Some of the population is immune, others are infected, others susceptible</p></li>
+</ul>
+<blockquote>
+<p>The expected number of secondary infections at time <span class="math inline">\(t\)</span> caused by an earlier primary infection</p>
+</blockquote>
+<div class="fragment">
+<p><span class="math inline">\(f(a) \geq 0,\ \forall a\)</span> — the rate at which an infection of age <span class="math inline">\(a\)</span> produces new infections</p>
+<p><span class="math display">\[
+\begin{aligned}
+R_0 &amp;= \int_{0}^\infty f(a)\mathsf{d}a, \\
+p(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
+\end{aligned}
+\]</span></p>
+</div>
+<div class="fragment">
+<p>Can allow <span class="math inline">\(p(t, a)\)</span>, hold this fixed for now.</p>
+</div>
+</section>
+<section id="the-generation-interval-distribution-pa" class="slide level2">
+<h2>The generation interval distribution <span class="math inline">\(p(a)\)</span></h2>
+<figure>
+<!-- https://www.cdc.gov/cfa-behind-the-model/php/data-research/rt-estimates/index.html -->
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/infectiousness-over-time-dfe.jpeg"></p>
+<figcaption>Source: US CDC Center for Forecasting Analytics, “Behind the Model.”</figcaption>
+</figure>
+</div>
+</figure>
+</section>
+<section id="rt-and-r_t-renewal-equation" class="slide level2">
+<h2><span class="math inline">\(R(t)\)</span> and <span class="math inline">\(R_t\)</span> — renewal equation</h2>
+<p><span class="math inline">\(R(t)\)</span> is defined implicitly through the <span class="secondary">renewal equation</span></p>
+<p><span class="math display">\[
+x(t) = R(t)\int_0^\infty x(t-a)p(a)\mathsf{d}a,
+\]</span></p>
+<p>where <span class="math inline">\(x(t)\)</span> are infections at time <span class="math inline">\(t\)</span>.</p>
+<div class="fragment">
+<hr>
+<p>In discrete time,</p>
+<p><span class="math display">\[
+x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a = R_t (x * \widetilde{p}).
+\]</span></p>
+</div>
+<div class="fragment">
+<hr>
+<p>And stochasticly,</p>
+<p><span class="math display">\[
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+\]</span></p>
+<div class="fragment box-text absolute" style="top: 50px; ">
+<p>Most estimators start here: <span class="math display">\[
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+\]</span></p>
+<ul>
+<li>Assume <span class="math inline">\(\widetilde{p}\)</span> is known</li>
+<li>Model <span class="math inline">\(x_t\ |\ x_1,\ldots,x_{t-1}\)</span> as Poisson or Negative Binomial</li>
+<li>Turn some inferential crank</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="r_t-for-covid-19-in-the-us" class="slide level2">
+<h2><span class="math inline">\(R_t\)</span> for COVID-19 in the US</h2>
+<iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/state-rt-timeseries/chart-covid.html#covid-United%20States" height="700" width="1400">
+</iframe>
+<p><span class="grey" style="font-size:0.7em;">Source: US CDC Center for Forecasting Analytics</span></p>
+</section>
+<section>
+<section id="estimating-r_t" class="title-slide slide level1 inverse center">
+<h1>Estimating <span class="math inline">\(R_t\)</span></h1>
+
+</section>
+<section id="data-issues" class="slide level2">
+<h2>Data issues</h2>
+<p><span class="math inline">\(x_t\)</span> is <span class="secondary">Infections</span>, but we don’t ever see those</p>
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://www.cdc.gov/cfa-behind-the-model/media/images/2024/10/Fig-6_Sept2024_update.jpg"></p>
+<figcaption>Source: US CDC Center for Forecasting Analytics, “Behind the Model.”</figcaption>
+</figure>
+</div>
+</figure>
+<div class="fragment box-text absolute" style="top: 150px; left: 150px; ">
+<ul>
+<li>Replace <span class="secondary">infections</span> with <span class="tertiary">cases</span></li>
+<li>Replace <span class="secondary">generation interval</span> with <span class="tertiary">serial interval</span></li>
+<li>Assume we have the <span class="tertiary">serial interval</span></li>
+</ul>
+</div>
+</section>
+<section id="serial-interval-distribution" class="slide level2">
+<h2>Serial interval distribution</h2>
+<p><br></p>
+
+<img data-src="gfx/Incubation_delay.svg" class="r-stretch"></section>
+<section id="standard-model-for-r_t" class="slide level2">
+<h2>Standard model for <span class="math inline">\(R_t\)</span></h2>
+<p><span class="math display">\[
+\begin{aligned}
+\eta_t &amp;= \sum_{a=0}^\infty y_{t-a}\widetilde{p}_a,\\ \\
+y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
+\end{aligned}
+\]</span></p>
+<ul>
+<li>Using <span class="math inline">\(y\)</span> instead of <span class="math inline">\(x\)</span> to be cases or hospitalizations or deaths, <span class="secondary">incidence</span></li>
+<li>The MLE for <span class="math inline">\(R_t\)</span> is just <span class="math inline">\(y_t / \eta_t\)</span>.</li>
+<li>This has really high variance, but unbiased.</li>
+<li>So everybody smooths it.</li>
+</ul>
+</section>
+<section id="the-state-of-the-art" class="slide level2">
+<h2>The state of the art</h2>
+<div class="flex">
+<div class="w-40">
+<ol type="1">
+<li><code>{EpiEstim}</code> (Cori, et al., 2013)</li>
+</ol>
+</div>
+<div class="w-60">
+<ul>
+<li>Gamma prior on <span class="math inline">\(R_t\)</span>, but use a trailing window</li>
+<li>Super fast computationally</li>
+<li>Smoothness is ad hoc</li>
+</ul>
+</div>
+</div>
+<div class="flex">
+<div class="w-40">
+<ol start="2" type="1">
+<li><code>{EpiFilter}</code> (Parag, 2020)</li>
+</ol>
+</div>
+<div class="w-60">
+<ul>
+<li>State space model</li>
+<li>One step smoothness: <span class="math inline">\(R_{s+1} \sim \textrm{Gaussian}(R_s,\ \alpha R_s)\)</span></li>
+<li>Uses a discretized particle filter-type algorithm</li>
+</ul>
+</div>
+</div>
+<div class="flex">
+<div class="w-40">
+<ol start="3" type="1">
+<li><code>{EpiLPS}</code> (Gressani, et al., 2022)</li>
+</ol>
+</div>
+<div class="w-60">
+<ul>
+<li>Negative Binomial likelihood</li>
+<li>Smoothness via <span class="math inline">\(\log(\Lambda_t) = \theta^{\mathsf{T}}b_t\)</span></li>
+<li><span class="math inline">\(b\)</span> is cubic B-spline basis, weighted Ridge penalty on <span class="math inline">\(\theta\)</span></li>
+<li>More priors, use Metropolis Adjusted Langevin Algorithm</li>
+</ul>
+</div>
+</div>
+<div class="fragment absolute box-text" style="top: 50px; ">
+<ol start="4" type="1">
+<li><code>{EpiNow2}</code> (CDC + CFA, Abbott, et al., 2023ish)</li>
+</ol>
+<ul>
+<li>Negative Binomial likelihood</li>
+<li>Smoothness via a GP prior</li>
+<li>Accommodates the sequence of delays from infection <span class="math inline">\(\longrightarrow\)</span> ??</li>
+<li>Adjusts for real-time issues like partial reporting</li>
+<li>Big Bayesian MCMC in Stan. Very slow.</li>
+</ul>
+</div>
+</section>
+<section id="our-model" class="slide level2">
+<h2>Our model</h2>
+<p>Let <span class="math inline">\(\theta_t := \log(R_t)\)</span>.</p>
+<p>Use Poisson likelihood.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\widehat{R} &amp;= \exp(\widehat{\theta}) &amp;\widehat{\theta} &amp;= \mathop{\mathrm{argmin}}_\theta\; \eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1
+\end{aligned}
+\]</span></p>
+<div class="fragment">
+<ul>
+<li>Convex, has a global optimum</li>
+<li><span class="math inline">\(\lambda\)</span> controls smoothness relative to data fidelity</li>
+<li><span class="math inline">\(\ell_1\)</span> penalty produces adaptive piecewise polynomials of order <span class="math inline">\(k+1\)</span></li>
+<li>Near minimax optimal for functions with bounded total variation</li>
+</ul>
+</div>
+</section>
+<section id="local-adaptivity-ell_1-vs.-ell_2" class="slide level2">
+<h2>Local adaptivity — <span class="math inline">\(\ell_1\)</span> vs.&nbsp;<span class="math inline">\(\ell_2\)</span></h2>
+
+<img data-src="gfx/adaptivity-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="polynomial-order" class="slide level2">
+<h2>Polynomial order</h2>
+<div class="flex">
+<div class="w-40">
+<p><br><br> <span class="math display">\[
+\begin{aligned}
+D^{(1)} &amp;= \begin{bmatrix}
+1 &amp; -1 &amp;  &amp;  &amp; &amp; \\
+&amp; 1 &amp; -1 &amp;  &amp; &amp; \\
+  &amp;   &amp;    &amp; \ddots &amp;&amp; \\
+&amp;   &amp;   &amp;  &amp; 1 &amp; -1
+\end{bmatrix} \\ \\
+&amp;\in \mathbb{R}^{(n-1)\times n}
+\end{aligned}
+\]</span></p>
+</div>
+<div class="w-60">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/k0-1.svg" class="quarto-figure quarto-figure-center" width="800" height="800"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="polynomial-order-1" class="slide level2">
+<h2>Polynomial order</h2>
+<div class="flex">
+<div class="w-40">
+<p><br><br> <span class="math display">\[
+\begin{aligned}
+D^{(2)} &amp;= \begin{bmatrix}
+1 &amp; -2 &amp; 1 &amp;  &amp; &amp; \\
+&amp; 1 &amp; -2 &amp; 1 &amp; &amp; \\
+  &amp;   &amp;    &amp; \ddots &amp;&amp; \\
+&amp;   &amp;   &amp; 1 &amp; -2 &amp; 1
+\end{bmatrix} \\ \\
+&amp;= D^{(1)}D^{(1)}\\ \\
+&amp;\in \mathbb{R}^{(n-k-1)\times n}
+\end{aligned}
+\]</span></p>
+</div>
+<div class="w-60">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/k1-1.svg" class="quarto-figure quarto-figure-center" width="800" height="800"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="polynomial-order-2" class="slide level2">
+<h2>Polynomial order</h2>
+<div class="flex">
+<div class="w-40">
+<p><br><br> <span class="math display">\[
+\begin{aligned}
+D^{(2)} &amp;= \begin{bmatrix}
+-1 &amp; 3 &amp; -3 &amp; 1  &amp; &amp; \\
+&amp; -1 &amp; 3 &amp; -3 &amp;1 &amp; \\
+  &amp;   &amp;    &amp; \ddots &amp;&amp; \\
+&amp;   &amp;  -1 &amp; 3 &amp; -3 &amp; 1
+\end{bmatrix} \\ \\
+&amp;= D^{(1)}D^{(2)}\\ \\
+&amp;\in \mathbb{R}^{(n-k-1)\times n}
+\end{aligned}
+\]</span></p>
+</div>
+<div class="w-60">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/k2-1.svg" class="quarto-figure quarto-figure-center" width="800" height="800"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!--
+
+---
+
+<input type="button" value="Animate Julia Set" onclick="init()"/>
+<canvas id="simulation" width="800" height="600"></canvas>
+
+
+-->
+</section>
+<section id="estimation-algorithm" class="slide level2">
+<h2>Estimation algorithm</h2>
+<p><span class="math display">\[
+\mathop{\mathrm{minimize}}_\theta\; \eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1
+\]</span></p>
+</section>
+<section id="estimation-algorithm-1" class="slide level2">
+<h2>Estimation algorithm</h2>
+<p><span class="math display">\[
+\mathop{\mathrm{minimize}}_{\theta,\ {\color{BurntOrange} \alpha}}\;
+\eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta +
+\lambda\Vert D^{(1)}{\color{BurntOrange} \alpha}\Vert_1\quad
+{\color{BurntOrange} \textrm{subject to}\quad \alpha = D^{(k)}\theta}
+\]</span></p>
+</section>
+<section id="estimation-algorithm-2" class="slide level2">
+<h2>Estimation algorithm</h2>
+<p><span class="math display">\[
+\mathop{\mathrm{minimize}}_{\theta,\ \alpha}\;
+\eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta +
+\lambda\Vert D^{(1)} \alpha\Vert_1\quad
+\textrm{subject to}\quad \alpha = D^{(k)}\theta
+\]</span></p>
+<br>
+<hr>
+<p><br></p>
+<p>Alternating direction method of multipliers (ADMM)</p>
+<p><span class="math display">\[
+\begin{aligned}
+\theta &amp;\longleftarrow \mathop{\mathrm{argmin}}_\theta\ \eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta +
+  \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
+\alpha &amp;\longleftarrow \mathop{\mathrm{argmin}}_\alpha\ \lambda\Vert D^{(1)} \alpha \Vert_1 +
+  \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
+u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
+\end{aligned}
+\]</span></p>
+</section>
+<section id="estimation-algorithm-3" class="slide level2">
+<h2>Estimation algorithm</h2>
+<p><span class="math display">\[
+\mathop{\mathrm{minimize}}_{\theta,\ \alpha}\;
+\eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta +
+\lambda\Vert D^{(1)} \alpha\Vert_1\quad
+\textrm{subject to}\quad \alpha = D^{(k)}\theta
+\]</span></p>
+<br>
+<hr>
+<p><br></p>
+<p>Alternating direction method of multipliers (ADMM)</p>
+<p><span class="math display">\[
+\begin{aligned}
+\theta &amp;\longleftarrow  {\color{Cerulean}\textrm{Proximal Newton / Fisher Scoring}} \\
+\alpha &amp;\longleftarrow  {\color{BurntOrange}\textrm{Fused Lasso Signal Approximator}} \\
+u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
+\end{aligned}
+\]</span></p>
+<div class="fragment">
+<p>Solve sequentially for <span class="math inline">\(\Vert (D^{\dagger})^{\mathsf{T}}(\eta - y)\Vert_\infty = \lambda_1 &gt; \cdots &gt; \lambda_M=\epsilon \lambda_1\)</span>.</p>
+</div>
+</section></section>
+<section>
+<section id="results-and-features" class="title-slide slide level1 inverse center">
+<h1>Results and features</h1>
+
+</section>
+<section id="canadian-covid-19-cases" class="slide level2">
+<h2>Canadian Covid-19 cases</h2>
+
+<img data-src="gfx/cancovid-rt-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="reconvolved-canadian-covid-19-cases" class="slide level2">
+<h2>Reconvolved Canadian Covid-19 cases</h2>
+
+<img data-src="gfx/cancovid-reconvolved-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="example-simulations-for-different-methods" class="slide level2">
+<h2>Example simulations for different methods</h2>
+
+<img data-src="gfx/simulated-realizations-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="rtestim-software" class="slide level2">
+<h2><code>{rtestim}</code> software</h2>
+<p><img data-src="gfx/rtestim.png" class="absolute" style="max-height: unset;top: -8%; right: -15%; height: 105%; "></p>
+<ul>
+<li><p>Guts are in <span class="monotype">C++</span> for speed</p></li>
+<li><p>Lots of the usual S3 methods</p></li>
+<li><p>Approximate “confidence” bands</p></li>
+<li><p><span class="math inline">\(\widehat{R}\)</span> is a member of a function space</p></li>
+<li><p>Arbitrary spacing of observations</p></li>
+<li><p>Built-in cross validation</p></li>
+<li><p>Time-varying delay distributions</p></li>
+</ul>
+</section>
+<section id="rtestim-software-1" class="slide level2">
+<h2><code>{rtestim}</code> software</h2>
+<div class="flex">
+<div class="w-40">
+<ul>
+<li><p>Guts are in <span class="monotype">C++</span> for speed</p></li>
+<li><p>Lots of the usual S3 methods</p></li>
+<li><p><span class="secondary">Approximate “confidence” bands</span></p></li>
+<li><p><span class="math inline">\(\widehat{R}\)</span> is a member of a function space</p></li>
+<li><p>Arbitrary spacing of observations</p></li>
+<li><p>Built-in cross validation</p></li>
+<li><p>Time-varying delay distributions</p></li>
+</ul>
+</div>
+<div class="w-60 fragment">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/confband-1.svg" class="quarto-figure quarto-figure-center" width="800" height="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>Approximation + Delta method gives</p>
+<p><span class="math display">\[
+\textrm{Var}(\widehat{R}) = \left(\textrm{diag}(\widehat{y}) + \lambda D^{\mathsf{T}}D\right)^{\dagger} (\eta^2)
+\]</span></p>
+</div>
+</section>
+<section id="rtestim-software-2" class="slide level2">
+<h2><code>{rtestim}</code> software</h2>
+<div class="flex">
+<div class="w-40">
+<ul>
+<li><p>Guts are in <span class="monotype">C++</span> for speed</p></li>
+<li><p>Lots of the usual S3 methods</p></li>
+<li><p>Approximate “confidence” bands</p></li>
+<li><p><span class="secondary"><span class="math inline">\(\widehat{R}\)</span> is a member of a function space</span></p></li>
+<li><p><span class="secondary">Arbitrary spacing of observations</span></p></li>
+<li><p><span class="secondary">Built-in cross validation</span></p></li>
+<li><p>Time-varying delay distributions</p></li>
+</ul>
+</div>
+<div class="w-60 fragment">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/cross-validation-1.svg" class="quarto-figure quarto-figure-center" width="800" height="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>The solution is an element of the space of <span class="tertiary"><em>discrete splines of order <span class="math inline">\(k\)</span></em></span> (Tibshirani, 2020)</p>
+<ul>
+<li>Lets us interpolate (and extrapolate) to off-observation points</li>
+<li>Lets us handle uneven spacing</li>
+</ul>
+</div>
+</section>
+<section id="rtestim-software-3" class="slide level2">
+<h2><code>{rtestim}</code> software</h2>
+<div class="flex">
+<div class="w-40">
+<ul>
+<li><p>Guts are in <span class="monotype">C++</span> for speed</p></li>
+<li><p>Lots of the usual S3 methods</p></li>
+<li><p>Approximate “confidence” bands</p></li>
+<li><p><span class="math inline">\(\widehat{R}\)</span> is a member of a function space</p></li>
+<li><p>Arbitrary spacing of observations</p></li>
+<li><p>Built-in cross validation</p></li>
+<li><p><span class="secondary">Time-varying delay distributions</span></p></li>
+</ul>
+</div>
+<div class="w-60">
+<div class="r-stack">
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/duotang-1.svg" class="quarto-figure quarto-figure-center" width="800" height="600"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/show-delay-distns-1.svg" class="quarto-figure quarto-figure-center" width="800" height="600"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="rtestim-software-4" class="slide level2">
+<h2><code>{rtestim}</code> software</h2>
+
+<img data-src="gfx/plot-tvar-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="final-slide" class="slide level2">
 <h2>Final slide</h2>
 <p><span class="r-fit-text">Yipee!!</span></p>
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

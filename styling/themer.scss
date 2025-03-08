@@ -10,6 +10,7 @@ $light-colors: (
   "teal": lighten(#17bebb, 20%),
   "green": #06D6a0,
   "pink": #FBCAEF,
+  "grey": #6c7888,
   "white": #fbfcff, // full blue, bit less green and red to match the primary colour
 );
 
@@ -65,7 +66,7 @@ $text-muted: theme-color("claret");
 }
 
 .reveal .slide figure>figcaption {
-  color: #6c7888;
+  color: theme-color("grey");
 }
 
 @each $name, $color in $dark-colors {
@@ -79,6 +80,7 @@ $text-muted: theme-color("claret");
 .primary {color: $primary;}
 .secondary {color: $secondary;}
 .tertiary {color: $tertiary;}
+.grey {color: theme-color("grey");}
 
 
 .inverse {
@@ -104,6 +106,25 @@ $text-muted: theme-color("claret");
   border-color: theme-color("claret");
   padding: 3em;
 }
+
+.cover-box-black {
+  color: theme-color("black");
+  background-color: $body-bg;
+  padding: 1em;
+}
+
+.cover-box-secondary {
+  color: theme-color("ubclblue");
+  background-color: $body-bg;
+  padding: 0 10em 0 0;
+}
+
+.cover-box-tertiary {
+  color: theme-color("orange");
+  background-color: $body-bg;
+  padding: 1em;
+}
+
 
 
 ul {

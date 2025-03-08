@@ -3,17 +3,16 @@ talk-title: "Nonparametric estimation of time-varying reproduction numbers"
 talk-short-title: "[{rtestim}]{.monotype}"
 author: "Daniel J. McDonald"
 repo-address: "dajmcdon/rtestim-2025"
-format: 
-  revealjs:
-    include-in-header: "src/infections.js"
+format: revealjs
 ---
 
 {{< include _setup.qmd >}}
 
 ## {background-image="gfx/cover-art-1.svg"}
 
-<!-- This is the title slide. The cover art is created in `_setup.qmd` -->
-<!-- Make changes to the styling to adjust for different graphics -->
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\minimize}{minimize}
+
 
 ::: {style="text-align:center; font-family:Gilda Display; font-size:1.8em; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .5); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);"}
 [{{< meta talk-title >}}]{.primary} 
@@ -22,7 +21,6 @@ format:
 
 [{{< meta author >}}]{.primary}
 
-<!-- Also generated in `_setup.qmd` -->
 ![](gfx/qrcodes-1.png){height="300px" fig-align="center"}
 :::
 
@@ -36,50 +34,417 @@ format:
 
 * [Kermack and McKendrick (1927-1933)]{.tertiary} - basic epidemic (mathematical) model
 
-![Shiode, et al. "The mortality rates and the space-time patterns of John Snow’s cholera epidemic map." _Int J Health Geogr_ *14*, 21 (2015). ](https://media.springernature.com/full/springer-static/image/art%3A10.1186%2Fs12942-015-0011-y/MediaObjects/12942_2015_11_Fig1_HTML.gif?as=webp){height=400px fig-align="center"}
+![Source: Shiode, et al., "The mortality rates and the space-time patterns of John Snow’s cholera epidemic map," (2015)](https://media.springernature.com/full/springer-static/image/art%3A10.1186%2Fs12942-015-0011-y/MediaObjects/12942_2015_11_Fig1_HTML.gif?as=webp){height=400px fig-align="center"}
 
 
 ## $R_0$ basic reproduction number
 
-Dates at least to [Alfred Lotka (1920s)]{.tertiary}
+Dates at least to [Alfred Lotka (1920s)]{.tertiary} and others (Feller, Blackwell, etc.)
 
-"How many secondary infections will each primary infection cause?"
+<br>
 
-::: {.fragment .absolute top=300 left=300}
+> The expected number of secondary infections due to a primary infection
 
-![Guerra, et al. "The basic reproduction number (R0) of measles: a systematic review" (2019)](https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg){height=400}
+<br><br>
 
-:::
+* $R_0 < 1$ means that the epidemic will die out
+* $R_0 > 1$ means that the epidemic will grow until everyone is infected
 
-::: {.fragment .absolute top=300 left=300}
 
-![Katelyn Jetelina, "YLE Newsletter" 3 March 2025](gfx/yle-measles.jpg){height=500}
+::: {.fragment .box-text .absolute top=50 left=150}
+
+![Source: Katelyn Jetelina, "YLE Newsletter," 3 March 2025.](gfx/yle-measles.jpg){height=600}
 
 :::
 
 ## $R_0$ is entirely retrospective
 
-* Let $\eta(a)$ be the rate of reproduction of an infection of age $a$
+* It's a property of the pathogen in a fully susceptible (infinite) population
 
-* Then $R_0$ is defined (mathematically) to be
+* Each outbreak is like a new sample
 
-$$
-R_0 = \int_0^\infty \eta(a)\mathsf{d}a
-$$
-
-* To calculate something like this from data, the "bonehead" way is to 
+* To estimate something like this from data, the "bonehead" way is to 
   1. Wait until the epidemic is over (no more infections circulating)
   2. Contact trace the primary infection responsible for each secondary infection
   3. Take a sample average of the number caused by each primary
+  4. Possibly repeat over many outbreaks
+  
+::: {.fragment .box-text .absolute top=50 left=100}
+
+![Source: Guerra, et al., "The basic reproduction number (R0) of measles," (2019).](https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg){height=500}
+
+:::
+
   
 ::: {.fragment .box-text .absolute top=300 left=300}
 
 Of course no one actually does that
 
-Lots of work on how to estimate this
+<br>
+
+Lots of work on how to estimate $R_0$
 
 :::
 
+## Effective reproduction number
+
+Suppose $s$% of the population is susceptible 
+
+Then, "the" effective reproduction number $R=sR_0$
+
+Allows you to reason about things like 
+
+<br>
+
+> The level of vaccine coverage necessary to prevent an outbreak from growing
+uncontrollably.
+
+<br>
+
+. . .
+
+So, for measles, if $R_0\approx 15$, the disease will die out if immunity is
+
+
+$$
+sR_0 \leq 1 \Longrightarrow 1-s \leq 1-1/R_0 \approx 93\%
+$$
+
+
+---
+
+<iframe data-src=https://epiengage-measles.tacc.utexas.edu height=850 width=1500></iframe>
+
+## $R(t)$ --- instantaneous reproduction number
+
+* The effective reproduction number in the middle of an outbreak
+
+* Some of the population is immune, others are infected, others susceptible
+
+> The expected number of secondary infections at time $t$ caused by an earlier primary
+infection
+
+. . .
+
+$f(a) \geq 0,\ \forall a$ --- the rate at which an infection of age $a$ produces new infections
+
+$$
+\begin{aligned}
+R_0 &= \int_{0}^\infty f(a)\mathsf{d}a, \\
+p(a) &= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
+\end{aligned}
+$$
+
+. . .
+
+Can allow $p(t, a)$, hold this fixed for now. 
+
+## The generation interval distribution $p(a)$
+
+<figure>
+<!-- https://www.cdc.gov/cfa-behind-the-model/php/data-research/rt-estimates/index.html -->
+![Source: US CDC Center for Forecasting Analytics, "Behind the Model."](gfx/infectiousness-over-time-dfe.jpeg)
+</figure>
+
+
+## $R(t)$ and $R_t$ --- renewal equation
+
+$R(t)$ is defined implicitly through the [renewal equation]{.secondary}
+
+$$
+x(t) = R(t)\int_0^\infty x(t-a)p(a)\mathsf{d}a,
+$$
+
+where $x(t)$ are infections at time $t$.
+
+. . .
+
+<hr/>
+
+In discrete time, 
+
+$$
+x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a = R_t (x * \widetilde{p}).
+$$
+
+. . .
+
+<hr/>
+
+And stochasticly,
+
+$$
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+$$
+
+
+::: {.fragment .box-text .absolute top=50}
+Most estimators start here:
+$$
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+$$
+
+* Assume $\widetilde{p}$ is known
+* Model $x_t\ |\ x_1,\ldots,x_{t-1}$ as Poisson or Negative Binomial
+* Turn some inferential crank
+
+:::
+
+## $R_t$ for COVID-19 in the US
+
+<iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/state-rt-timeseries/chart-covid.html#covid-United%20States" height=700 width=1400></iframe>
+
+[Source: US CDC Center for Forecasting Analytics]{.grey style="font-size:0.7em;"}
+
+# Estimating $R_t$ {.inverse}
+
+## Data issues
+
+$x_t$ is [Infections]{.secondary}, but we don't ever see those
+
+<figure>
+![Source: US CDC Center for Forecasting Analytics, "Behind the Model."](https://www.cdc.gov/cfa-behind-the-model/media/images/2024/10/Fig-6_Sept2024_update.jpg)
+</figure>
+
+::: {.fragment .box-text .absolute top=150 left=150}
+
+* Replace [infections]{.secondary} with [cases]{.tertiary}
+* Replace [generation interval]{.secondary} with [serial interval]{.tertiary}
+* Assume we have the [serial interval]{.tertiary}
+
+:::
+
+## Serial interval distribution
+
+<br>
+
+![](gfx/Incubation_delay.svg)
+
+
+## Standard model for $R_t$
+
+$$
+\begin{aligned}
+\eta_t &= \sum_{a=0}^\infty y_{t-a}\widetilde{p}_a,\\ \\
+y_t\ |\ y_1,\ldots,y_{t-1} &\sim \textrm{Poisson}(R_t\eta_t).
+\end{aligned}
+$$
+
+* Using $y$ instead of $x$ to be cases or hospitalizations or deaths, [incidence]{.secondary}
+* The MLE for $R_t$ is just $y_t / \eta_t$.
+* This has really high variance, but unbiased.
+* So everybody smooths it.
+
+## The state of the art
+
+::: flex
+::: w-40
+1. `{EpiEstim}` (Cori, et al., 2013) 
+:::
+::: w-60
+- Gamma prior on $R_t$, but use a trailing window
+- Super fast computationally
+- Smoothness is ad hoc
+:::
+:::
+
+::: flex
+::: w-40
+2. `{EpiFilter}` (Parag, 2020)
+:::
+::: w-60
+- State space model
+- One step smoothness: $R_{s+1} \sim \textrm{Gaussian}(R_s,\ \alpha R_s)$
+- Uses a discretized particle filter-type algorithm
+:::
+:::
+
+::: flex
+::: w-40
+3. `{EpiLPS}` (Gressani, et al., 2022)
+:::
+::: w-60
+- Negative Binomial likelihood
+- Smoothness via $\log(\Lambda_t) = \theta^{\mathsf{T}}b_t$
+- $b$ is cubic B-spline basis, weighted Ridge penalty on $\theta$
+- More priors, use Metropolis Adjusted Langevin Algorithm
+:::
+:::
+
+::: {.fragment .absolute .box-text top=50}
+4. `{EpiNow2}` (CDC + CFA, Abbott, et al., 2023ish)
+
+* Negative Binomial likelihood
+* Smoothness via a GP prior
+* Accommodates the sequence of delays from infection $\longrightarrow$ ??
+* Adjusts for real-time issues like partial reporting
+* Big Bayesian MCMC in Stan. Very slow.
+:::
+
+
+## Our model
+
+Let $\theta_t := \log(R_t)$. 
+
+Use Poisson likelihood.
+
+$$
+\begin{aligned}
+\widehat{R} &= \exp(\widehat{\theta}) &\widehat{\theta} &= \argmin_\theta\; \eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1
+\end{aligned}
+$$
+
+. . .
+
+* Convex, has a global optimum
+* $\lambda$ controls smoothness relative to data fidelity
+* $\ell_1$ penalty produces adaptive piecewise polynomials of order $k+1$
+* Near minimax optimal for functions with bounded total variation
+
+
+## Local adaptivity --- $\ell_1$ vs. $\ell_2$
+
+
+```{r}
+#| label: adaptivity
+#| cache: true
+set.seed(12345)
+n <- 101
+x <- seq(-.2, .6, length = n)
+fn <- function(x, a = 60) {
+  g <- function(x) 3 * sin(3 * x) + 2 * sin(15 * x) + 5 * sin(2 * x)
+  r <- function(x) sin(a * x)
+  rev(- g(x) * (x > 0) - r(x) * (x <= 0))
+}
+y <- fn(x) + rnorm(n, 0, .5)
+
+o3 <- trendfilter::cv_trendfilter(y, x, nfolds = 10)
+lam_loc <- which(o3$lambda == o3$lambda_min)
+tf <- predict(o3, which_lambda = "lambda_min")
+tf_df <- o3$full_fit$dof[lam_loc]
+s1 <- smooth.spline(x, y, df = tf_df)
+s2 <- smooth.spline(x, y, df = tf_df + 10)
+dat <- tibble(x = x + .2, y = y)
+tib <- tibble(x = x + .2, `trend filter` = tf, truth = fn(.env$x), 
+              `spline (same df)` = s1$y, `spline (df + 10)` = s2$y)
+tib |>
+  pivot_longer(-x) |>
+  ggplot(aes(x)) +
+  geom_point(data = dat, aes(y = y), shape = 16, colour = theme_black) +
+  geom_line(aes(y = value, colour = fct_relevel(name, "truth"))) +
+  scale_colour_brewer(palette = "Set1", name = "")
+```
+
+## Polynomial order
+
+::: flex
+::: w-40
+<br><br>
+$$
+\begin{aligned}
+D^{(1)} &= \begin{bmatrix} 
+1 & -1 &  &  & & \\ 
+ & 1 & -1 &  & & \\
+  &   &    & \ddots && \\ 
+ &   &   &  & 1 & -1 
+\end{bmatrix} \\ \\
+&\in \mathbb{R}^{(n-1)\times n}
+\end{aligned}
+$$
+:::
+
+::: w-60
+```{r}
+#| label: k0
+#| cache: true
+#| fig-width: 5
+#| fig-height: 5
+#| out-width: "800px"
+#| out-height: "800px"
+o0 <- trendfilter::cv_trendfilter(y, x, k = 0, nfolds = 10)
+tib <- tibble(x = x + .2, y = predict(o0, which_lambda = "lambda_1se"))
+ggplot(mapping = aes(x, y)) +
+  geom_point(data = dat, shape = 16, colour = primary) +
+  geom_line(data = tib, colour = tertiary, linewidth = 1.5)
+```
+:::
+:::
+
+## Polynomial order
+
+::: flex
+::: w-40
+<br><br>
+$$
+\begin{aligned}
+D^{(2)} &= \begin{bmatrix} 
+1 & -2 & 1 &  & & \\ 
+ & 1 & -2 & 1 & & \\
+  &   &    & \ddots && \\ 
+ &   &   & 1 & -2 & 1 
+\end{bmatrix} \\ \\
+&= D^{(1)}D^{(1)}\\ \\
+&\in \mathbb{R}^{(n-k-1)\times n}
+\end{aligned}
+$$
+:::
+
+::: w-60
+```{r}
+#| label: k1
+#| cache: true
+#| fig-width: 5
+#| fig-height: 5
+#| out-width: "800px"
+#| out-height: "800px"
+o1 <- trendfilter::cv_trendfilter(y, x, k = 1, nfolds = 10)
+tib <- tibble(x = x + .2, y = predict(o1, which_lambda = "lambda_1se"))
+ggplot(mapping = aes(x, y)) +
+  geom_point(data = dat, shape = 16, colour = primary) +
+  geom_line(data = tib, colour = tertiary, linewidth = 1.5) 
+```
+:::
+:::
+
+## Polynomial order
+
+::: flex
+::: w-40
+<br><br>
+$$
+\begin{aligned}
+D^{(2)} &= \begin{bmatrix} 
+-1 & 3 & -3 & 1  & & \\ 
+ & -1 & 3 & -3 &1 & \\
+  &   &    & \ddots && \\ 
+ &   &  -1 & 3 & -3 & 1 
+\end{bmatrix} \\ \\
+&= D^{(1)}D^{(2)}\\ \\
+&\in \mathbb{R}^{(n-k-1)\times n}
+\end{aligned}
+$$
+:::
+
+::: w-60
+```{r}
+#| label: k2
+#| cache: true
+#| fig-width: 5
+#| fig-height: 5
+#| out-width: "800px"
+#| out-height: "800px"
+o2 <- trendfilter::cv_trendfilter(y, x, k = 2, nfolds = 10)
+tib <- tibble(x = x + .2, y = predict(o2, which_lambda = "lambda_1se"))
+ggplot(mapping = aes(x, y)) +
+  geom_point(data = dat, shape = 16, colour = primary) +
+  geom_line(data = tib, colour = tertiary, linewidth = 1.5)
+```
+:::
+:::
+
+
+<!--
 
 ---
 
@@ -87,7 +452,418 @@ Lots of work on how to estimate this
 <canvas id="simulation" width="800" height="600"></canvas>
 
 
+-->
 
+## Estimation algorithm
+
+$$
+\minimize_\theta\; \eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1
+$$
+
+## Estimation algorithm
+
+$$
+\minimize_{\theta,\ {\color{BurntOrange} \alpha}}\; 
+\eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + 
+\lambda\Vert D^{(1)}{\color{BurntOrange} \alpha}\Vert_1\quad
+{\color{BurntOrange} \textrm{subject to}\quad \alpha = D^{(k)}\theta}
+$$
+
+
+## Estimation algorithm
+
+$$
+\minimize_{\theta,\ \alpha}\; 
+\eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + 
+\lambda\Vert D^{(1)} \alpha\Vert_1\quad
+\textrm{subject to}\quad \alpha = D^{(k)}\theta
+$$
+
+<br>
+<hr>
+<br>
+
+Alternating direction method of multipliers (ADMM)
+
+$$
+\begin{aligned}
+\theta &\longleftarrow \argmin_\theta\ \eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + 
+  \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
+\alpha &\longleftarrow \argmin_\alpha\ \lambda\Vert D^{(1)} \alpha \Vert_1 +
+  \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
+u &\longleftarrow u + D^{(k)}\theta - \alpha
+\end{aligned}
+$$
+
+
+## Estimation algorithm
+
+$$
+\minimize_{\theta,\ \alpha}\; 
+\eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + 
+\lambda\Vert D^{(1)} \alpha\Vert_1\quad
+\textrm{subject to}\quad \alpha = D^{(k)}\theta
+$$
+
+<br>
+<hr>
+<br>
+
+Alternating direction method of multipliers (ADMM)
+
+$$
+\begin{aligned}
+\theta &\longleftarrow  {\color{Cerulean}\textrm{Proximal Newton / Fisher Scoring}} \\
+\alpha &\longleftarrow  {\color{BurntOrange}\textrm{Fused Lasso Signal Approximator}} \\
+u &\longleftarrow u + D^{(k)}\theta - \alpha
+\end{aligned}
+$$
+
+. . .
+
+Solve sequentially for $\Vert (D^{\dagger})^{\mathsf{T}}(\eta - y)\Vert_\infty = \lambda_1 > \cdots > \lambda_M=\epsilon \lambda_1$. 
+
+# Results and features {.inverse}
+
+## Canadian Covid-19 cases
+
+```{r}
+#| label: cancovid-rt
+#| message: false
+plot(rto) +
+  coord_cartesian(ylim = c(0.7, 2)) + 
+  scale_x_date(expand = expansion()) + 
+  scale_color_distiller(
+    palette = "Set1", 
+    direction = 1, 
+    name = expression(lambda), 
+    trans = "log10",
+    labels = scales::label_log(), 
+    breaks = c(10^6, 10^7)
+  ) +
+  theme(plot.background = element_blank())
+```
+
+
+## Reconvolved Canadian Covid-19 cases
+
+```{r}
+#| label: cancovid-reconvolved
+tibble(
+  `Predicted cases` = c(predict(rto)), 
+  lambda = rep(rto$lambda, each = length(rto$observed_counts)),
+  Date = rep(rto$x, times = length(rto$lambda))
+) |>
+  ggplot() +
+  #geom_line(data = cancovid, mapping = aes(x = date, y = incident_cases), color = "black") +
+  geom_line(aes(Date, `Predicted cases`, colour = lambda, group = lambda)) +
+  scale_x_date(expand = expansion()) + 
+  scale_color_distiller(
+    palette = "Set1", 
+    direction = 1, 
+    name = expression(lambda), 
+    trans = "log10",
+    labels = scales::label_log(), 
+    breaks = c(10^6, 10^7)
+  ) +
+  scale_y_continuous(expand = expansion(c(0, .05))) +
+  theme(plot.background = element_blank())
+```
+
+## Example simulations for different methods
+
+```{r}
+#| label: simulated-realizations
+#| fig-width: 10
+#| fig-height: 5
+#| cache: true
+res_dat_long <- read_rds("src/data_example_estimates_long.rds")
+res_dat_long %>%
+  filter(si_type == "measles", dist == "Poisson") %>% 
+  group_by(Rt_case, method) %>%
+  ggplot(aes(y = Rt_value, x = time)) + 
+  geom_ribbon(aes(ymax = Upper_bound, ymin = Lower_bound, fill = method), alpha = 0.4) +
+  geom_line(aes(col = method)) +
+  geom_line(aes(y = trueRt)) + 
+  facet_grid(Rt_case ~ method) +
+  scale_colour_manual(values = ggsci::pal_uchicago()(8)) +
+  scale_fill_manual(values = ggsci::pal_uchicago()(8)) +
+  labs(y = "Rt estimates for measles epidemics\nwith Poisson incidence", x = "Time") + 
+  scale_x_continuous(expand = expansion()) + 
+  scale_y_continuous(expand = expansion(c(0, 0.05))) + 
+  coord_cartesian(ylim = c(0, 4)) + 
+  theme(legend.position = "none")
+```
+
+## `{rtestim}` software
+
+![](gfx/rtestim.png){.absolute top="-8%" right="-15%" height="105%" style="max-height: unset;"}
+
+* Guts are in [C++]{.monotype} for speed
+
+* Lots of the usual S3 methods
+
+* Approximate "confidence" bands
+
+* $\widehat{R}$ is a member of a function space
+
+* Arbitrary spacing of observations
+
+* Built-in cross validation
+
+* Time-varying delay distributions
+
+## `{rtestim}` software
+
+::: flex
+::: w-40
+
+* Guts are in [C++]{.monotype} for speed
+
+* Lots of the usual S3 methods
+
+* [Approximate "confidence" bands]{.secondary}
+
+* $\widehat{R}$ is a member of a function space
+
+* Arbitrary spacing of observations
+
+* Built-in cross validation
+
+* Time-varying delay distributions
+
+:::
+
+
+
+::: {.w-60 .fragment}
+
+```{r}
+#| label: confband
+#| out-width: "800px"
+#| out-height: "500px"
+can_cb <- confband(rto, lambda = rto$lambda[20], level = c(.5, .8, .95))
+plot(can_cb) + 
+  coord_cartesian(ylim = c(0.6, 1.8)) +
+  scale_x_date(expand = expansion()) + 
+  theme(plot.background = element_blank())
+```
+
+:::
+:::
+
+::: {.fragment}
+Approximation + Delta method gives
+
+$$
+\textrm{Var}(\widehat{R}) = \left(\textrm{diag}(\widehat{y}) + \lambda D^{\mathsf{T}}D\right)^{\dagger} (\eta^2)
+$$
+
+:::
+
+
+## `{rtestim}` software
+
+::: flex
+::: w-40
+
+* Guts are in [C++]{.monotype} for speed
+
+* Lots of the usual S3 methods
+
+* Approximate "confidence" bands
+
+* [$\widehat{R}$ is a member of a function space]{.secondary}
+
+* [Arbitrary spacing of observations]{.secondary}
+
+* [Built-in cross validation]{.secondary}
+
+* Time-varying delay distributions
+
+:::
+
+
+
+::: {.w-60 .fragment}
+
+```{r}
+#| label: cross-validation
+#| out-width: "800px"
+#| out-height: "500px"
+# can_cv <- cv_estimate_rt(cancovid$incident_cases, x = cancovid$date, nfold = 10)
+can_cv <- read_rds("src/can_cv_10fold.rds")
+plot(can_cv) + 
+  theme(plot.background = element_blank()) +
+  scale_x_continuous(transform = "log10", labels = scales::label_log())
+```
+
+:::
+:::
+
+::: {.fragment}
+The solution is an element of the space of [_discrete splines of order $k$_]{.tertiary} 
+(Tibshirani, 2020)
+
+* Lets us interpolate (and extrapolate) to off-observation points
+* Lets us handle uneven spacing
+:::
+
+## `{rtestim}` software
+
+::: flex
+::: w-40
+
+* Guts are in [C++]{.monotype} for speed
+
+* Lots of the usual S3 methods
+
+* Approximate "confidence" bands
+
+* $\widehat{R}$ is a member of a function space
+
+* Arbitrary spacing of observations
+
+* Built-in cross validation
+
+* [Time-varying delay distributions]{.secondary}
+
+:::
+
+
+
+::: {.w-60}
+
+::: {.r-stack}
+::: {.fragment}
+```{r}
+#| label: duotang
+#| out-width: "800px"
+#| out-height: "600px"
+#| fig-height: 4
+#| fig-width: 5
+props <- read_rds("src/duotang-counts.rds") |>
+  pivot_wider(names_from = pango_group, values_from = n, values_fill = 0) |>
+  mutate(total = rowSums(across(-c(week, province)))) %>%
+  mutate(across(-c(week, province, total), ~ .x / total)) %>%
+  select(-total)
+
+smooth_it <- function(props_group) {
+  z <- props_group |> select(-week, -province)
+  n <- names(z)
+  nn <- gsub(" ", "_", n)
+  names(z) <- nn
+  form_resp <- paste0("cbind(", paste0(names(z), collapse = ",") ,") ~ ")
+  z$time <- as.numeric(props_group$week)
+  form <- as.formula(paste0(form_resp, "poly(time, degree = 3)"))
+  fits <- nnet::multinom(form, z, trace = FALSE)
+  rng <- range(props_group$week)
+  alltime <- as.numeric(seq(rng[1], rng[2], by = 1))
+  z <- as_tibble(predict(fits, data.frame(time = alltime), type = "probs")) %>%
+    mutate(Date = as.Date(alltime))
+  z
+}
+
+can_props_smoothed <- smooth_it(props %>% filter(province == "Canada"))
+
+can_props_smoothed %>%
+  pivot_longer(-Date) |>
+  ggplot(aes(Date, y = value, fill = name)) +
+  geom_area(position = "stack") +
+  ylab("Variants circulating in Canada") +
+  xlab("") + 
+  theme(plot.background = element_blank()) +
+  scale_x_date(name = "", date_breaks = "1 year", date_labels = "%Y", expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) + 
+  scale_fill_viridis_d(name = "")
+```
+:::
+::: {.fragment}
+```{r}
+#| label: show-delay-distns
+#| out-width: "800px"
+#| out-height: "600px"
+#| fig-height: 4
+#| fig-width: 5
+can_pred_class <- read_rds("src/can_pred_class.rds")
+delay_distns_can <- read_rds("src/delay-distns-byvar.rds") |> # in rtestim/vignettes
+  filter(para == "SI", type %in% unique(can_pred_class$var))
+delay_distns_can |>
+  rowwise() |>
+  mutate(probability = list(discretize_gamma(0:20, shape, scale))) |>
+  ungroup() |>
+  select(type, probability) |>
+  unnest(probability) |>
+  group_by(type) |>
+  mutate(delay = row_number() - 1) |>
+  ggplot(aes(delay, probability, colour = type)) +
+  geom_line() + 
+  scale_color_brewer(palette = "Set1", name = "") +
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  theme(plot.background = element_rect(fill = theme_white, colour = theme_white))
+```
+:::
+:::
+:::
+:::
+
+## `{rtestim}` software
+
+```{r}
+#| label: tv-delays
+library(Matrix)
+n <- nrow(cancovid)
+delay_mat <- matrix(0, n, n)
+delay_mat[1,1] <- 1
+for (iter in 2:n) {
+  current_var <- can_pred_class$var[iter]
+  current_pars <- delay_distns_can |> filter(type == current_var)
+  delay <- discretize_gamma(0:(iter - 1), current_pars$shape, current_pars$scale)
+  delay_mat[iter, 1:iter] <- rev(delay)
+}
+delay_mat <- drop0(as(delay_mat, "CsparseMatrix")) # make it sparse, not necessary
+delay_mat <- delay_mat / rowSums(delay_mat) # renormalize
+can_tvar <- estimate_rt(
+  cancovid$incident_cases, 
+  x = cancovid$date, 
+  delay_distn = delay_mat,
+  lambda_min_ratio = 1e-6
+)
+can_tvar_ci <- confband(can_tvar, can_tvar$lambda[30], level = c(.5, .8, .95)) |>
+  bind_cols(can_pred_class) |>
+  mutate(variant = fct_relevel(as.factor(var), "Ancestral lineage"))
+```
+
+```{r}
+#| label: plot-tvar
+#| fig-width: 8
+#| fig-height: 4
+ggplot(can_tvar_ci, aes(x = Date)) +
+  geom_ribbon(
+    data = cancovid |> rename(Date = date) |> 
+      mutate(incident_cases = incident_cases * 3 / 100000 + .5),
+    aes(ymin = 0, ymax = incident_cases), fill = "grey", alpha = .5
+  ) +
+  geom_ribbon(aes(ymin = `2.5%`, ymax = `97.5%`, fill = variant), alpha = .2) +
+  geom_ribbon(aes(ymin = `10.0%`, ymax = `90.0%`, fill = variant), alpha = .3) +
+  geom_ribbon(aes(ymin = `25.0%`, ymax = `75.0%`, fill = variant), alpha = .5) +
+  geom_line(aes(y = fit), color = primary) +
+  geom_hline(yintercept = 1, color = theme_black) +
+  ylab("Estimated Rt with 50%, 80%, and 95%\nconfidence bands") +
+  scale_y_continuous(
+    expand = expansion(0),
+    sec.axis = sec_axis(~ (. - 0.5) * 100 / 3, name = "Observed cases (1000s)")
+  ) + 
+  scale_x_date(expand = expansion()) +
+  coord_cartesian(ylim = c(0.5, 1.75), xlim = ymd(c("2020-04-01", "2023-03-01"))) + 
+  scale_fill_brewer(palette = "Set1", name = "") +
+  theme(legend.position = "bottom")
+```
 
 ## Final slide
 

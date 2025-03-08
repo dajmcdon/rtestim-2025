@@ -12,6 +12,7 @@ my_url <- "https://dajmcdon.github.io"
 paper_url <- "https://doi.org/10.1371/journal.pcbi.1012324"
 slides_url <- "https://dajmcdon.github.io/rtestim-2025"
 suppressMessages(library(tidyverse))
+library(rtestim)
 theme_set(
   theme_bw() +
     theme(
@@ -28,7 +29,6 @@ theme_set(
 #| fig-width: 8
 #| fig-height: 4.5
 #| cache: true
-library(rtestim)
 rto <- estimate_rt(cancovid$incident_cases, x = cancovid$date)         
 Rt <- rto$Rt
 colnames(Rt) <- as.character(1:ncol(Rt))
