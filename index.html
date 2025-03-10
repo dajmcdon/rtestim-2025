@@ -136,7 +136,7 @@
 <p><span class="primary">Daniel J. McDonald</span></p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="gfx/qrcodes-1.png" class="quarto-figure quarto-figure-center" height="300"></p>
+<p><img data-src="gfx/qrcodes-1.png" class="quarto-figure quarto-figure-center" height="350"></p>
 </figure>
 </div>
 </div>
@@ -240,16 +240,16 @@ sR_0 \leq 1 \Longrightarrow 1-s \leq 1-1/R_0 \approx 93\%
 <p><span class="math display">\[
 \begin{aligned}
 R_0 &amp;= \int_{0}^\infty f(a)\mathsf{d}a, \\
-p(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
+g(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
 \end{aligned}
 \]</span></p>
 </div>
 <div class="fragment">
-<p>Can allow <span class="math inline">\(p(t, a)\)</span>, hold this fixed for now.</p>
+<p>Can allow <span class="math inline">\(g(t, a)\)</span>, hold this fixed for now.</p>
 </div>
 </section>
-<section id="the-generation-interval-distribution-pa" class="slide level2">
-<h2>The generation interval distribution <span class="math inline">\(p(a)\)</span></h2>
+<section id="the-generation-interval-distribution-ga" class="slide level2">
+<h2>The generation interval distribution <span class="math inline">\(g(a)\)</span></h2>
 <figure>
 <!-- https://www.cdc.gov/cfa-behind-the-model/php/data-research/rt-estimates/index.html -->
 <div class="quarto-figure quarto-figure-center">
@@ -264,28 +264,28 @@ p(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
 <h2><span class="math inline">\(R(t)\)</span> and <span class="math inline">\(R_t\)</span> — renewal equation</h2>
 <p><span class="math inline">\(R(t)\)</span> is defined implicitly through the <span class="secondary">renewal equation</span></p>
 <p><span class="math display">\[
-x(t) = R(t)\int_0^\infty x(t-a)p(a)\mathsf{d}a,
+x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a,
 \]</span></p>
 <p>where <span class="math inline">\(x(t)\)</span> are infections at time <span class="math inline">\(t\)</span>.</p>
 <div class="fragment">
 <hr>
 <p>In discrete time,</p>
 <p><span class="math display">\[
-x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a = R_t (x * \widetilde{p}).
+x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 \]</span></p>
 </div>
 <div class="fragment">
 <hr>
 <p>And stochasticly,</p>
 <p><span class="math display">\[
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 \]</span></p>
 <div class="fragment box-text absolute" style="top: 50px; ">
 <p>Most estimators start here: <span class="math display">\[
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
 \]</span></p>
 <ul>
-<li>Assume <span class="math inline">\(\widetilde{p}\)</span> is known</li>
+<li>Assume <span class="math inline">\(\widetilde{g}\)</span> is known</li>
 <li>Model <span class="math inline">\(x_t\ |\ x_1,\ldots,x_{t-1}\)</span> as Poisson or Negative Binomial</li>
 <li>Turn some inferential crank</li>
 </ul>
@@ -331,12 +331,13 @@ x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a = R_t (x * \widetilde{p}).
 <h2>Standard model for <span class="math inline">\(R_t\)</span></h2>
 <p><span class="math display">\[
 \begin{aligned}
-\eta_t &amp;= \sum_{a=0}^\infty y_{t-a}\widetilde{p}_a,\\ \\
+\eta_t &amp;= \sum_{a=0}^\infty y_{t-a}p_a,\\ \\
 y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 \end{aligned}
 \]</span></p>
 <ul>
 <li>Using <span class="math inline">\(y\)</span> instead of <span class="math inline">\(x\)</span> to be cases or hospitalizations or deaths, <span class="secondary">incidence</span></li>
+<li>Using <span class="math inline">\(p\)</span> for serial interval distribution (discretized)</li>
 <li>The MLE for <span class="math inline">\(R_t\)</span> is just <span class="math inline">\(y_t / \eta_t\)</span>.</li>
 <li>This has really high variance, but unbiased.</li>
 <li>So everybody smooths it.</li>
@@ -381,8 +382,8 @@ y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 <div class="w-60">
 <ul>
 <li>Negative Binomial likelihood</li>
-<li>Smoothness via <span class="math inline">\(\log(\Lambda_t) = \theta^{\mathsf{T}}b_t\)</span></li>
-<li><span class="math inline">\(b\)</span> is cubic B-spline basis, weighted Ridge penalty on <span class="math inline">\(\theta\)</span></li>
+<li>Smoothness via <span class="math inline">\(\log(R_t\eta_t) = \mathbf{B}_{t,:}\beta\)</span></li>
+<li><span class="math inline">\(\mathbf{B}\)</span> is cubic B-spline basis, weighted Ridge penalty on <span class="math inline">\(\beta\)</span></li>
 <li>More priors, use Metropolis Adjusted Langevin Algorithm</li>
 </ul>
 </div>
@@ -488,7 +489,7 @@ D^{(2)} &amp;= \begin{bmatrix}
 <div class="w-40">
 <p><br><br> <span class="math display">\[
 \begin{aligned}
-D^{(2)} &amp;= \begin{bmatrix}
+D^{(3)} &amp;= \begin{bmatrix}
 -1 &amp; 3 &amp; -3 &amp; 1  &amp; &amp; \\
 &amp; -1 &amp; 3 &amp; -3 &amp;1 &amp; \\
   &amp;   &amp;    &amp; \ddots &amp;&amp; \\
@@ -594,6 +595,10 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 <section id="canadian-covid-19-cases" class="slide level2">
 <h2>Canadian Covid-19 cases</h2>
 
+<img data-src="gfx/cancovid-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="r_t-for-canadian-covid-19-cases" class="slide level2">
+<h2><span class="math inline">\(R_t\)</span> for Canadian Covid-19 cases</h2>
+
 <img data-src="gfx/cancovid-rt-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="reconvolved-canadian-covid-19-cases" class="slide level2">
 <h2>Reconvolved Canadian Covid-19 cases</h2>
@@ -645,7 +650,8 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 <div class="fragment">
 <p>Approximation + Delta method gives</p>
 <p><span class="math display">\[
-\textrm{Var}(\widehat{R}) = \left(\textrm{diag}(\widehat{y}) + \lambda D^{\mathsf{T}}D\right)^{\dagger} (\eta^2)
+\textrm{Var}(\widehat{R}) = \left(\textrm{diag}(\widehat{y}) +
+\lambda D^{\mathsf{T}}D\right)^{\dagger} \left(\frac{1}{\eta^2}\right)
 \]</span></p>
 </div>
 </section>
@@ -729,9 +735,56 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 <h2><code>{rtestim}</code> software</h2>
 
 <img data-src="gfx/plot-tvar-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="final-slide" class="slide level2">
-<h2>Final slide</h2>
-<p><span class="r-fit-text">Yipee!!</span></p>
+<section id="summary-and-collaborators" class="slide level2">
+<h2>Summary and collaborators</h2>
+<div class="flex">
+<div class="w-40">
+<p><span class="secondary">Contributions</span></p>
+<ul>
+<li>Framework for <span class="math inline">\(R_t\)</span> estimation</li>
+<li>Naturally imposes smoothness</li>
+<li>Fast, extensible, easy to use</li>
+<li>Has “confidence” bands</li>
+</ul>
+<p><span class="secondary">Future work</span></p>
+<ul>
+<li>Forecast</li>
+<li>Mixed smoothness behaviours</li>
+<li>Figure out CV for convolution</li>
+<li>Better confidence bands</li>
+<li>Use relationship with growth rate</li>
+</ul>
+</div>
+<div class="w-60 fragment">
+<p><span class="secondary">Collaborators and funding</span></p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-nrow="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img data-src="gfx/olivia.jpg"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img data-src="gfx/elvis.jpeg"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img data-src="gfx/paul.jpg"></p>
+</div>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://www.nserc-crsng.gc.ca/img/logos/img-logo2-en.png" class="quarto-figure quarto-figure-center" width="300"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://alliancecan.ca/themes/custom/site_theme/logo.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
 
 </section></section>
     </div>

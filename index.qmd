@@ -21,7 +21,7 @@ format: revealjs
 
 [{{< meta author >}}]{.primary}
 
-![](gfx/qrcodes-1.png){height="300px" fig-align="center"}
+![](gfx/qrcodes-1.png){height="350px" fig-align="center"}
 :::
 
 ## Mathematical modelling of disease / epidemics is very old 
@@ -131,15 +131,15 @@ $f(a) \geq 0,\ \forall a$ --- the rate at which an infection of age $a$ produces
 $$
 \begin{aligned}
 R_0 &= \int_{0}^\infty f(a)\mathsf{d}a, \\
-p(a) &= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
+g(a) &= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
 \end{aligned}
 $$
 
 . . .
 
-Can allow $p(t, a)$, hold this fixed for now. 
+Can allow $g(t, a)$, hold this fixed for now. 
 
-## The generation interval distribution $p(a)$
+## The generation interval distribution $g(a)$
 
 <figure>
 <!-- https://www.cdc.gov/cfa-behind-the-model/php/data-research/rt-estimates/index.html -->
@@ -152,7 +152,7 @@ Can allow $p(t, a)$, hold this fixed for now.
 $R(t)$ is defined implicitly through the [renewal equation]{.secondary}
 
 $$
-x(t) = R(t)\int_0^\infty x(t-a)p(a)\mathsf{d}a,
+x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a,
 $$
 
 where $x(t)$ are infections at time $t$.
@@ -164,7 +164,7 @@ where $x(t)$ are infections at time $t$.
 In discrete time, 
 
 $$
-x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a = R_t (x * \widetilde{p}).
+x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 $$
 
 . . .
@@ -174,17 +174,17 @@ $$
 And stochasticly,
 
 $$
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 $$
 
 
 ::: {.fragment .box-text .absolute top=50}
 Most estimators start here:
 $$
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{p}_a.
+\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
 $$
 
-* Assume $\widetilde{p}$ is known
+* Assume $\widetilde{g}$ is known
 * Model $x_t\ |\ x_1,\ldots,x_{t-1}$ as Poisson or Negative Binomial
 * Turn some inferential crank
 
@@ -225,12 +225,13 @@ $x_t$ is [Infections]{.secondary}, but we don't ever see those
 
 $$
 \begin{aligned}
-\eta_t &= \sum_{a=0}^\infty y_{t-a}\widetilde{p}_a,\\ \\
+\eta_t &= \sum_{a=0}^\infty y_{t-a}p_a,\\ \\
 y_t\ |\ y_1,\ldots,y_{t-1} &\sim \textrm{Poisson}(R_t\eta_t).
 \end{aligned}
 $$
 
 * Using $y$ instead of $x$ to be cases or hospitalizations or deaths, [incidence]{.secondary}
+* Using $p$ for serial interval distribution (discretized)
 * The MLE for $R_t$ is just $y_t / \eta_t$.
 * This has really high variance, but unbiased.
 * So everybody smooths it.
@@ -265,8 +266,8 @@ $$
 :::
 ::: w-60
 - Negative Binomial likelihood
-- Smoothness via $\log(\Lambda_t) = \theta^{\mathsf{T}}b_t$
-- $b$ is cubic B-spline basis, weighted Ridge penalty on $\theta$
+- Smoothness via $\log(R_t\eta_t) = \mathbf{B}_{t,:}\beta$
+- $\mathbf{B}$ is cubic B-spline basis, weighted Ridge penalty on $\beta$
 - More priors, use Metropolis Adjusted Langevin Algorithm
 :::
 :::
@@ -414,7 +415,7 @@ ggplot(mapping = aes(x, y)) +
 <br><br>
 $$
 \begin{aligned}
-D^{(2)} &= \begin{bmatrix} 
+D^{(3)} &= \begin{bmatrix} 
 -1 & 3 & -3 & 1  & & \\ 
  & -1 & 3 & -3 &1 & \\
   &   &    & \ddots && \\ 
@@ -533,6 +534,18 @@ Solve sequentially for $\Vert (D^{\dagger})^{\mathsf{T}}(\eta - y)\Vert_\infty =
 ## Canadian Covid-19 cases
 
 ```{r}
+#| label: cancovid
+cancovid |>
+  ggplot(aes(date)) +
+  geom_ribbon(aes(ymin = 0, ymax = incident_cases / 1e3), fill = primary) +
+  scale_x_date(expand = expansion()) +
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  ylab("Reported cases (1000s)") + xlab("Date")
+```
+
+## $R_t$ for Canadian Covid-19 cases
+
+```{r}
 #| label: cancovid-rt
 #| message: false
 plot(rto) +
@@ -555,12 +568,16 @@ plot(rto) +
 ```{r}
 #| label: cancovid-reconvolved
 tibble(
-  `Predicted cases` = c(predict(rto)), 
+  `Predicted cases` = c(predict(rto)) / 1000, 
   lambda = rep(rto$lambda, each = length(rto$observed_counts)),
   Date = rep(rto$x, times = length(rto$lambda))
 ) |>
   ggplot() +
-  #geom_line(data = cancovid, mapping = aes(x = date, y = incident_cases), color = "black") +
+  geom_ribbon(
+    data = cancovid, 
+    aes(date, ymin = 0, ymax = incident_cases / 1000), 
+    fill = "grey60"
+  ) +
   geom_line(aes(Date, `Predicted cases`, colour = lambda, group = lambda)) +
   scale_x_date(expand = expansion()) + 
   scale_color_distiller(
@@ -571,7 +588,10 @@ tibble(
     labels = scales::label_log(), 
     breaks = c(10^6, 10^7)
   ) +
-  scale_y_continuous(expand = expansion(c(0, .05))) +
+  scale_y_continuous(
+    expand = expansion(c(0, .05)), 
+    name = "Predicted / Reported Cases (1000s)"
+  ) +
   theme(plot.background = element_blank())
 ```
 
@@ -661,7 +681,8 @@ plot(can_cb) +
 Approximation + Delta method gives
 
 $$
-\textrm{Var}(\widehat{R}) = \left(\textrm{diag}(\widehat{y}) + \lambda D^{\mathsf{T}}D\right)^{\dagger} (\eta^2)
+\textrm{Var}(\widehat{R}) = \left(\textrm{diag}(\widehat{y}) + 
+\lambda D^{\mathsf{T}}D\right)^{\dagger} \left(\frac{1}{\eta^2}\right)
 $$
 
 :::
@@ -865,7 +886,46 @@ ggplot(can_tvar_ci, aes(x = Date)) +
   theme(legend.position = "bottom")
 ```
 
-## Final slide
+## Summary and collaborators
 
-[Yipee!!]{.r-fit-text}
+::: flex
 
+::: w-40
+[Contributions]{.secondary}
+
+* Framework for $R_t$ estimation
+* Naturally imposes smoothness
+* Fast, extensible, easy to use
+* Has "confidence" bands
+
+[Future work]{.secondary}
+
+* Forecast
+* Mixed smoothness behaviours
+* Figure out CV for convolution
+* Better confidence bands
+* Use relationship with growth rate
+
+:::
+
+::: {.w-60 .fragment}
+
+[Collaborators and funding]{.secondary}
+
+::: {layout-nrow=1}
+
+![](gfx/olivia.jpg){height=2000px}
+
+![](gfx/elvis.jpeg){height=200px}
+
+![](gfx/paul.jpg){height=200px}
+
+:::
+
+
+![](https://www.nserc-crsng.gc.ca/img/logos/img-logo2-en.png){width=300 fig-align=center}
+
+![](https://alliancecan.ca/themes/custom/site_theme/logo.svg){fig-align=center}
+
+:::
+:::
