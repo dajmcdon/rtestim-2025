@@ -163,11 +163,23 @@
 <blockquote>
 <p>The expected number of secondary infections due to a primary infection</p>
 </blockquote>
+<div class="flex">
+<div class="w-40">
 <p><br><br></p>
 <ul>
-<li><span class="math inline">\(R_0 &lt; 1\)</span> means that the epidemic will die out</li>
-<li><span class="math inline">\(R_0 &gt; 1\)</span> means that the epidemic will grow until everyone is infected</li>
+<li><span class="math inline">\(R_0 &lt; 1\)</span> <span class="tertiary">⟹</span> the epidemic will die out</li>
 </ul>
+<p><br></p>
+<ul>
+<li><span class="math inline">\(R_0 &gt; 1\)</span> <span class="tertiary">⟹</span> the epidemic will grow until everyone is infected</li>
+</ul>
+</div>
+<div class="w-60" style="text-align: center;">
+<canvas id="simulation" width="800" height="500">
+</canvas>
+<script src="src/infections.js"></script>
+</div>
+</div>
 <div class="fragment box-text absolute" style="top: 50px; left: 150px; ">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -748,6 +760,7 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 </ul>
 <p><span class="secondary">Future work</span></p>
 <ul>
+<li>Allow Negative Binomial likelihood</li>
 <li>Forecast</li>
 <li>Mixed smoothness behaviours</li>
 <li>Figure out CV for convolution</li>

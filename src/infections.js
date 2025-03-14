@@ -1,4 +1,3 @@
-<script>
 function init () {
 const canvas = document.getElementById("simulation");
 const ctx = canvas.getContext("2d");
@@ -45,7 +44,9 @@ class Ball {
 
   lightenColor() {
     const redValue = Math.min(255, 100 + this.generation * 40);
-    return `rgb(${redValue}, 0, 0)`;
+    const greenValue = Math.min(255, 15 + this.generation * 30);
+    const blueValue = Math.min(255, 22 + this.generation * 30);
+    return `rgb(${redValue}, ${greenValue}, ${blueValue})`;
   }
 }
 
@@ -58,9 +59,6 @@ function reset() {
   init();
 }
 
-function init() {
-}
-
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -68,7 +66,7 @@ function update() {
     ball.move();
     ball.draw();
     balls.forEach((other, otherIndex) => {
-      if (index !== otherIndex && ball.isTouching(other) && ball.color.startsWith("rgb(") && other.color === "blue") {
+      if (index !== otherIndex && ball.isTouching(other) && ball.color.startsWith("rgb(") && other.color === "#6495ed") {
         other.generation = ball.generation + 1;
         other.color = other.lightenColor();
       }
@@ -82,10 +80,10 @@ function update() {
   }
 }
 
-balls.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, "rgb(100, 0, 0)", 0));
+balls.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, "rgb(100, 15, 22)", 0));
   for (let i = 1; i < BALL_COUNT; i++) {
-    balls.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, "blue"));
+    balls.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, "#6495ed"));
   }
   requestAnimationFrame(update);
 }
-</script>
+window.onload = init;

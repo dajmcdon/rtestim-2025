@@ -45,11 +45,24 @@ Dates at least to [Alfred Lotka (1920s)]{.tertiary} and others (Feller, Blackwel
 
 > The expected number of secondary infections due to a primary infection
 
+
+
+::: flex
+::: w-40
 <br><br>
 
-* $R_0 < 1$ means that the epidemic will die out
-* $R_0 > 1$ means that the epidemic will grow until everyone is infected
+* $R_0 < 1$ [&xrArr;]{.tertiary} the epidemic will die out
 
+<br>
+
+* $R_0 > 1$ [&xrArr;]{.tertiary} the epidemic will grow until everyone is infected
+:::
+
+::: {.w-60 style="text-align: center;"}
+<canvas id="simulation" width="800" height="500"></canvas>
+<script src="src/infections.js"></script>
+:::
+:::
 
 ::: {.fragment .box-text .absolute top=50 left=150}
 
@@ -63,12 +76,14 @@ Dates at least to [Alfred Lotka (1920s)]{.tertiary} and others (Feller, Blackwel
 
 * Each outbreak is like a new sample
 
+
 * To estimate something like this from data, the "bonehead" way is to 
   1. Wait until the epidemic is over (no more infections circulating)
   2. Contact trace the primary infection responsible for each secondary infection
   3. Take a sample average of the number caused by each primary
   4. Possibly repeat over many outbreaks
   
+
 ::: {.fragment .box-text .absolute top=50 left=100}
 
 ![Source: Guerra, et al., "The basic reproduction number (R0) of measles," (2019).](https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg){height=500}
@@ -576,7 +591,7 @@ tibble(
   geom_ribbon(
     data = cancovid, 
     aes(date, ymin = 0, ymax = incident_cases / 1000), 
-    fill = "grey60"
+    fill = primary, alpha = .5
   ) +
   geom_line(aes(Date, `Predicted cases`, colour = lambda, group = lambda)) +
   scale_x_date(expand = expansion()) + 
@@ -900,6 +915,7 @@ ggplot(can_tvar_ci, aes(x = Date)) +
 
 [Future work]{.secondary}
 
+* Allow Negative Binomial likelihood
 * Forecast
 * Mixed smoothness behaviours
 * Figure out CV for convolution
