@@ -66,7 +66,7 @@ Dates at least to [Alfred Lotka (1920s)]{.tertiary} and others (Feller, Blackwel
 
 ::: {.fragment .box-text .absolute top=50 left=150}
 
-![Source: Katelyn Jetelina, "YLE Newsletter," 3 March 2025.](gfx/yle-measles.jpg){height=600}
+![Source: Katelyn Jetelina, "YLE Newsletter," 17 March 2025.](gfx/yle-measles.jpg){height=600}
 
 :::
 
@@ -352,7 +352,7 @@ tib |>
   scale_colour_brewer(palette = "Set1", name = "")
 ```
 
-## Polynomial order
+## Polynomial order, $k=0$
 
 ::: flex
 ::: w-40
@@ -387,7 +387,7 @@ ggplot(mapping = aes(x, y)) +
 :::
 :::
 
-## Polynomial order
+## Polynomial order, $k=1$
 
 ::: flex
 ::: w-40
@@ -423,7 +423,7 @@ ggplot(mapping = aes(x, y)) +
 :::
 :::
 
-## Polynomial order
+## Polynomial order, $k=2$
 
 ::: flex
 ::: w-40
@@ -459,16 +459,6 @@ ggplot(mapping = aes(x, y)) +
 :::
 :::
 
-
-<!--
-
----
-
-<input type="button" value="Animate Julia Set" onclick="init()"/>
-<canvas id="simulation" width="800" height="600"></canvas>
-
-
--->
 
 ## Estimation algorithm
 
