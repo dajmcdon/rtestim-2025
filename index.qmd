@@ -162,7 +162,76 @@ Can allow $g(t, a)$, hold this fixed for now.
 </figure>
 
 
+# Interlude on SIR models
+
+## Deterministic SIR
+
+$$\begin{aligned}
+N &= S(0) + I(0) + R(0)\\
+\frac{dS}{dt} & =  -\frac{\beta}{N} S(t)I(t)\\
+\frac{dI}{dt} & =  \frac{\beta}{N} I(t)S(t) - \gamma I(t)\\
+\frac{dR}{dt} & =  \gamma I(t)
+\end{aligned}$$
+
+$$R_0 = \beta/\gamma.$$
+
+$$R(t) = \frac{\beta S(t)}{\gamma N}.$$
+
+## Stochastic SIR
+
+```{r simulate-sir}
+
+sim_SIR <- function(N = 1e3, beta = .3, gamma = .2, i0 = 3) {
+  TT <- N
+  stopifnot(gamma > 0, gamma < 1)
+  states <- matrix(NA, nrow=5, ncol=TT)
+  rownames(states) <- c("S", "I", "R", "infections", "expected")
+  states[, 1] <- c(N - i0, i0, 0, i0, 1)
+  tt <- 1
+  while (tt < TT && states["S", tt] > 0 && states["I", tt] > 0) {
+    (tt <- tt + 1)
+    expected <- states["S", tt-1] * beta * states["I", tt-1] / N
+    infections <- rbinom(1, states["S", tt-1], beta * states["I", tt-1] / N)
+    removals <- rbinom(1, states["I", tt-1], gamma)
+    states["infections", tt] <- infections
+    states["expected", tt] <- expected
+    states["S", tt] <- states["S", tt-1] - infections
+    states["I", tt] <- states["I", tt-1] + infections - removals
+    states["R", tt] <- states["R", tt-1] + removals
+  }
+  as_tibble(t(states)[1:tt, ]) |> 
+    mutate(time = row_number(), Rt = (beta * S) / (gamma * N))
+}
+
+set.seed(12345)
+out <- sim_SIR()
+comp <- out |> select(S:R, time) |> pivot_longer(-time) |>
+  ggplot(aes(time, value, colour = name)) +
+  geom_line() +
+  theme_bw() + ylab("Prevalence") +
+  theme(plot.background = element_blank()) +
+  scale_y_continuous(expand = expansion(0)) +
+  scale_x_continuous(expand = expansion(0)) +
+  scale_color_brewer(palette = "Dark2", name = "")
+
+rt_inf <- out |> select(infections, Rt, time) |>
+  ggplot(aes(time)) +
+  geom_line(aes(y = Rt), colour = secondary) +
+  geom_hline(yintercept = 1) +
+  geom_segment(aes(y = 0, yend = infections / max(infections) * 3 / 2),
+   colour = fourth_colour) +
+  theme_bw() + ylab("Rt / scaled incident infections") +
+  theme(plot.background = element_blank()) +
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(0))
+
+cowplot::plot_grid(comp, rt_inf)
+```
+
+
 ## $R(t)$ and $R_t$ --- renewal equation
+
+Alternatively: rather than working with a particular compartmental model
 
 $R(t)$ is defined implicitly through the [renewal equation]{.secondary}
 
@@ -251,7 +320,19 @@ $$
 * This has really high variance, but unbiased.
 * So everybody smooths it.
 
-## The state of the art
+::: {.fragment .box-text .absolute top=50}
+* This isn't going to give you "$R_t$", because you didn't use incident infections.
+
+* At least, the timing is wrong, because the observable happend _after_ infection.
+
+* Deconvolve incidence first.
+
+[More on this later.]{.claret}
+
+:::
+
+
+## The state of the art (you saw some of these already)
 
 ::: flex
 ::: w-40
@@ -584,7 +665,7 @@ tibble(
     fill = primary, alpha = .5
   ) +
   geom_line(aes(Date, `Predicted cases`, colour = lambda, group = lambda)) +
-  scale_x_date(expand = expansion()) + 
+  scale_x_date(expand = expansion(), name = "Date") + 
   scale_color_distiller(
     palette = "Set1", 
     direction = 1, 
@@ -906,6 +987,7 @@ ggplot(can_tvar_ci, aes(x = Date)) +
 [Future work]{.secondary}
 
 * Allow Negative Binomial likelihood
+* Deconvolve incidence 
 * Forecast
 * Mixed smoothness behaviours
 * Figure out CV for convolution
@@ -931,7 +1013,7 @@ ggplot(can_tvar_ci, aes(x = Date)) +
 
 ![](https://www.nserc-crsng.gc.ca/img/logos/img-logo2-en.png){width=300 fig-align=center}
 
-![](https://alliancecan.ca/themes/custom/site_theme/logo.svg){fig-align=center}
+![](gfx/alliancecan.png){width=500 fig-align=center}
 
 :::
 :::

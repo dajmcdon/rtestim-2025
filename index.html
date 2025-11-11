@@ -272,8 +272,29 @@ g(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
 </div>
 </figure>
 </section>
+<section>
+<section id="interlude-on-sir-models" class="title-slide slide level1 center">
+<h1>Interlude on SIR models</h1>
+
+</section>
+<section id="deterministic-sir" class="slide level2">
+<h2>Deterministic SIR</h2>
+<p><span class="math display">\[\begin{aligned}
+N &amp;= S(0) + I(0) + R(0)\\
+\frac{dS}{dt} &amp; =  -\frac{\beta}{N} S(t)I(t)\\
+\frac{dI}{dt} &amp; =  \frac{\beta}{N} I(t)S(t) - \gamma I(t)\\
+\frac{dR}{dt} &amp; =  \gamma I(t)
+\end{aligned}\]</span></p>
+<p><span class="math display">\[R_0 = \beta/\gamma.\]</span></p>
+<p><span class="math display">\[R(t) = \frac{\beta S(t)}{\gamma N}.\]</span></p>
+</section>
+<section id="stochastic-sir" class="slide level2">
+<h2>Stochastic SIR</h2>
+
+<img data-src="gfx/simulate-sir-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="rt-and-r_t-renewal-equation" class="slide level2">
 <h2><span class="math inline">\(R(t)\)</span> and <span class="math inline">\(R_t\)</span> — renewal equation</h2>
+<p>Alternatively: rather than working with a particular compartmental model</p>
 <p><span class="math inline">\(R(t)\)</span> is defined implicitly through the <span class="secondary">renewal equation</span></p>
 <p><span class="math display">\[
 x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a,
@@ -309,7 +330,7 @@ x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 <iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/state-rt-timeseries/chart-covid.html#covid-United%20States" height="700" width="1400">
 </iframe>
 <p><span class="grey" style="font-size:0.7em;">Source: US CDC Center for Forecasting Analytics</span></p>
-</section>
+</section></section>
 <section>
 <section id="estimating-r_t" class="title-slide slide level1 inverse center">
 <h1>Estimating <span class="math inline">\(R_t\)</span></h1>
@@ -354,9 +375,17 @@ y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 <li>This has really high variance, but unbiased.</li>
 <li>So everybody smooths it.</li>
 </ul>
+<div class="fragment box-text absolute" style="top: 50px; ">
+<ul>
+<li><p>This isn’t going to give you “<span class="math inline">\(R_t\)</span>”, because you didn’t use incident infections.</p></li>
+<li><p>At least, the timing is wrong, because the observable happend <em>after</em> infection.</p></li>
+<li><p>Deconvolve incidence first.</p></li>
+</ul>
+<p><span class="claret">More on this later.</span></p>
+</div>
 </section>
-<section id="the-state-of-the-art" class="slide level2">
-<h2>The state of the art</h2>
+<section id="the-state-of-the-art-you-saw-some-of-these-already" class="slide level2">
+<h2>The state of the art (you saw some of these already)</h2>
 <div class="flex">
 <div class="w-40">
 <ol type="1">
@@ -752,6 +781,7 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 <p><span class="secondary">Future work</span></p>
 <ul>
 <li>Allow Negative Binomial likelihood</li>
+<li>Deconvolve incidence</li>
 <li>Forecast</li>
 <li>Mixed smoothness behaviours</li>
 <li>Figure out CV for convolution</li>
@@ -784,7 +814,7 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="https://alliancecan.ca/themes/custom/site_theme/logo.svg" class="quarto-figure quarto-figure-center"></p>
+<p><img data-src="gfx/alliancecan.png" class="quarto-figure quarto-figure-center" width="500"></p>
 </figure>
 </div>
 </div>

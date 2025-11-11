@@ -29,7 +29,7 @@ theme_set(
 #| fig-width: 8
 #| fig-height: 4.5
 #| cache: true
-rto <- estimate_rt(cancovid$incident_cases, x = cancovid$date)         
+rto <- estimate_rt(cancovid$incident_cases, x = cancovid$date)
 Rt <- rto$Rt
 colnames(Rt) <- as.character(1:ncol(Rt))
 Rt <- pivot_longer(as_tibble(Rt) |> mutate(x = cancovid$date), -x) |>
