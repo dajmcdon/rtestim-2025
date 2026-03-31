@@ -42,3 +42,5 @@ vignettes/*.pdf
 .Renviron
 
 /.quarto/
+
+**/*.quarto_ipynb

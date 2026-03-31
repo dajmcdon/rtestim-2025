@@ -4,14 +4,15 @@
 # These colours match those in `themer.scss`
 primary <- "#002145"
 secondary <- "#6495ed"
-tertiary <- "#ffa319"
-fourth_colour <- "#a41623"
+tertiary <- "#a41623"
+fourth_colour <- "#ffa319"
 theme_white <- "#fbfcff"
 theme_black <- "#00162e"
 my_url <- "https://dajmcdon.github.io"
 paper_url <- "https://doi.org/10.1371/journal.pcbi.1012324"
 slides_url <- "https://dajmcdon.github.io/rtestim-2025"
 suppressMessages(library(tidyverse))
+source("src/measles-bubble.R")
 library(rtestim)
 theme_set(
   theme_bw() +

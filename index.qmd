@@ -66,7 +66,7 @@ Dates at least to [Alfred Lotka (1920s)]{.tertiary} and others (Feller, Blackwel
 
 ::: {.fragment .box-text .absolute top=50 left=150}
 
-![Source: Katelyn Jetelina, "YLE Newsletter," 17 March 2025.](gfx/yle-measles.jpg){height=600}
+![JHU Measles Tracking Team Data](gfx/measles-bubble.svg){width=1000}
 
 :::
 
@@ -122,13 +122,13 @@ So, for measles, if $R_0\approx 15$, the disease will die out if immunity is
 
 
 $$
-sR_0 \leq 1 \Longrightarrow 1-s \leq 1-1/R_0 \approx 93\%
+sR_0\ \leq\ 1\ \Longrightarrow\ 1-s\ \leq\ 1-\frac{1}{R_0}\ \approx\ 93\%
 $$
 
 
 ---
 
-<iframe data-src=https://epiengage-measles.tacc.utexas.edu height=850 width=1500></iframe>
+<iframe data-src=https://cdcposit.cdc.gov/measles-simulator/ height=850 width=1500></iframe>
 
 ## $R(t)$ --- instantaneous reproduction number
 
@@ -143,12 +143,10 @@ infection
 
 $f(a) \geq 0,\ \forall a$ --- the rate at which an infection of age $a$ produces new infections
 
-$$
-\begin{aligned}
-R_0 &= \int_{0}^\infty f(a)\mathsf{d}a, \\
-g(a) &= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
-\end{aligned}
-$$
+$$\begin{aligned}
+R_0 &= \int_{0}^\infty f(a)\ \mathsf{d}a, \\
+g(a) &= \frac{f(a)} {\int_{0}^\infty f(a)\ \mathsf{d}a} = \frac{f(a)}{R_0}.
+\end{aligned}$$
 
 . . .
 
@@ -276,7 +274,10 @@ $$
 
 ## $R_t$ for COVID-19 in the US
 
-<iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/state-rt-timeseries/chart-covid.html#covid-United%20States" height=700 width=1400></iframe>
+<!-- No longer functional
+Raw data: https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/
+<iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/flu_data.json" height=700 width=1400></iframe>
+-->
 
 [Source: US CDC Center for Forecasting Analytics]{.grey style="font-size:0.7em;"}
 
@@ -803,7 +804,12 @@ $$
 #| label: cross-validation
 #| out-width: "800px"
 #| out-height: "500px"
-# can_cv <- cv_estimate_rt(cancovid$incident_cases, x = cancovid$date, nfold = 10)
+# can_cv <- cv_estimate_rt(
+#     cancovid$incident_cases, 
+#     x = cancovid$date, 
+#     nfold = 10, 
+#     lambda_min_ratio = 1e-8
+# )
 can_cv <- read_rds("src/can_cv_10fold.rds")
 plot(can_cv) + 
   theme(plot.background = element_blank()) +
@@ -1010,8 +1016,7 @@ ggplot(can_tvar_ci, aes(x = Date)) +
 
 :::
 
-
-![](https://www.nserc-crsng.gc.ca/img/logos/img-logo2-en.png){width=300 fig-align=center}
+![](gfx/NSERC_RGB.svg){width=300 fig-align=center}
 
 ![](gfx/alliancecan.png){width=500 fig-align=center}
 
