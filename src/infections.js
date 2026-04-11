@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 
 const BALL_COUNT = 20;
 const BALL_RADIUS = 15;
-const SPEED = 2;
+const SPEED = 4;
 let balls = [];
 
 class Ball {

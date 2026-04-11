@@ -178,11 +178,11 @@ Suppose each of N people in a bucket at time t:
 
 ::: {.incremental}
 * During period $h$, each $S$ meets $kh$ people.
-* Assume $P( S \textrm{ meets } I \textrm{ and becomes } I ) = c$.
-* Then $P( S(t) \rightarrow I(t+h) ) = 1 - (1 - c I(t)  / N )^{hk} \approx kchI(t) / N$.
-* Therefore, $I(t+h) | S(t),\ I(t) \sim \textrm{Binom}(S(t),\ kchI(t) / N)$.
-* Assume $P( I(t) \rightarrow R(t+h)) = \gamma h,\ \forall t$.
-* Then $R(t+h) | I(t) \sim \textrm{Binom}(I(t),\ \gamma h)$.
+* Assume $\mathbb{P}( S \textrm{ meets } I \textrm{ and becomes } I ) = c$.
+* Then $\mathbb{P}( S(t) \rightarrow I(t+h) ) = 1 - (1 - c I(t)  / N )^{hk} \approx kchI(t) / N$.
+* Therefore, $I(t+h) \mid S(t),\ I(t) \sim \textrm{Binom}(S(t),\ kchI(t) / N)$.
+* Assume $\mathbb{P}( I(t) \rightarrow R(t+h)) = \gamma h,\ \forall t$.
+* Then $R(t+h) \mid I(t) \sim \textrm{Binom}(I(t),\ \gamma h)$.
 :::
 
 :::
@@ -251,9 +251,9 @@ There is an equivalence between a compartmental model and the renewal equation.
 $$\begin{aligned}
 R_0 &= \beta\ /\ \gamma\\
 x_{t+1} 
-&= \beta \frac{S_{t}}{N} \sum_{k = 0}^t \big[(1-\gamma)^{k}\big] x_{t-k} 
-= R_0 \frac{S_{t}}{N} \sum_{k = 0}^t \big[\gamma(1-\gamma)^{k}\big] x_{t-k} 
-= R_{t}\sum_{k = 0}^t g(k)x_{t-k}
+&= \beta \frac{S_{t}}{N} \sum_{k = 0}^{t-1} \big[(1-\gamma)^{k}\big] x_{t-k} 
+= R_0 \frac{S_{t}}{N} \sum_{k = 0}^{t-1} \big[\gamma(1-\gamma)^{k}\big] x_{t-k} 
+= R_{t}\sum_{k = 0}^{t-1} g(k)x_{t-k}
 \end{aligned}$$
 
 ```{r show-sir-Rt}
@@ -347,18 +347,21 @@ $$
 And stochasticly,
 
 $$
-\mathbb{E}\big[x_{t+1}\ |\ x_1,\ldots,x_{t}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t\times (x * \widetilde{g})_t.
+\mathbb{E}\big[x_{t+1} \mid x_1,\ldots,x_{t}\big] 
+= R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a 
+= R_t\times (x * \widetilde{g})_t.
 $$
 
 
 ::: {.fragment .box-text .absolute top=50}
 Most estimators start here:
 $$
-\mathbb{E}\big[x_{t+1}\ |\ x_1,\ldots,x_{t}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
+\mathbb{E}\big[x_{t+1} \mid x_1,\ldots,x_{t}\big] 
+= R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
 $$
 
 * Assume $\widetilde{g}$ is known
-* Model $x_{t+1}\ |\ x_1,\ldots,x_{t}$ as Poisson or Negative Binomial
+* Model $x_{t+1} \mid x_1,\ldots,x_{t}$ as Poisson or Negative Binomial
 * Turn some inferential crank
 
 :::
@@ -395,7 +398,7 @@ ggplot(cdcrt, aes(date)) +
 
 ## Data issues
 
-$x_t$ is [Infections]{.secondary}, but we don't ever see those
+$x_t$ is [incident infections]{.secondary}, but we don't ever see those
 
 <figure>
 ![Source: US CDC Center for Forecasting Analytics, "Behind the Model."](https://www.cdc.gov/cfa-behind-the-model/media/images/2024/10/Fig-6_Sept2024_update.jpg)
@@ -419,8 +422,8 @@ $x_t$ is [Infections]{.secondary}, but we don't ever see those
 ## Standard model for $R_t$
 
 $$\begin{aligned}
-\eta_t &= \sum_{a=1}^\infty y_{t-a}p_a,\\ \\
-y_t\ |\ y_1,\ldots,y_{t-1} &\sim \textrm{Poisson}(R_t\eta_t).
+\eta_t &= \sum_{a=0}^{t-1} y_{t-a}p_a,\\ \\
+y_t\ |\ y_{t-1},\ldots,y_{1} &\sim \textrm{Poisson}(R_t\eta_t).
 \end{aligned}$$
 
 * Using $y$ instead of $x$ to be cases or hospitalizations or deaths, [incidence]{.secondary}
@@ -1110,19 +1113,20 @@ ggplot(can_tvar_ci, aes(x = Date)) +
 
 [Collaborators and funding]{.secondary}
 
-::: {layout-nrow=1}
+::: {layout="[[1,1,1], [-2,5,5], [-1,4,-1]]"}
 
-![](gfx/olivia.jpg){height=2000px}
+![](gfx/olivia.jpg)
 
-![](gfx/elvis.jpeg){height=200px}
+![](gfx/elvis.jpeg)
 
-![](gfx/paul.jpg){height=200px}
+![](gfx/paul.jpg)
+
+<img src="gfx/NSERC_RGB.svg" style="height: 150px;"/>
+
+![](gfx/delphi.jpg)
+
+![](gfx/alliancecan.png)
 
 :::
-
-![](gfx/NSERC_RGB.svg){width=300 fig-align=center}
-
-![](gfx/alliancecan.png){width=500 fig-align=center}
-
 :::
 :::
