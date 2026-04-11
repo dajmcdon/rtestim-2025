@@ -6,6 +6,16 @@ primary <- "#002145"
 secondary <- "#6495ed"
 tertiary <- "#a41623"
 fourth_colour <- "#ffa319"
+fifth_colour <- "#177245"
+sixth_colour <- "#A393BF"
+colvec <- c(
+  primary = primary,
+  secondary = secondary,
+  tertiary = tertiary,
+  fourth_colour = fourth_colour,
+  fifth_colour = fifth_colour,
+  sixth_colour = sixth_colour
+)
 theme_white <- "#fbfcff"
 theme_black <- "#00162e"
 my_url <- "https://dajmcdon.github.io"
@@ -22,6 +32,19 @@ theme_set(
       legend.key = element_blank()
     )
 )
+delphi_pal <- function(n) {
+  if (n > 6L) {
+    warning("Not enough colors in this palette!")
+  }
+  unname(colvec)[1:n]
+}
+scale_fill_delphi <- function(..., aesthetics = "fill") {
+  discrete_scale(aesthetics = aesthetics, palette = delphi_pal, ...)
+}
+scale_color_delphi <- function(..., aesthetics = "color") {
+  discrete_scale(aesthetics = aesthetics, palette = delphi_pal, ...)
+}
+scale_colour_delphi <- scale_color_delphi
 ```
 
 ```{r, dev.args=list(bg=primary)}
@@ -39,7 +62,10 @@ Rt <- pivot_longer(as_tibble(Rt) |> mutate(x = cancovid$date), -x) |>
 Rt |>
   ggplot(aes(x, value, colour = as.numeric(name), group = name)) +
   geom_line() +
-  coord_cartesian(ylim = c(0.8, 1.5), xlim = c(ymd("2021-08-01", "2022-08-31"))) +
+  coord_cartesian(
+    ylim = c(0.8, 1.5),
+    xlim = c(ymd("2021-08-01", "2022-08-31"))
+  ) +
   scale_x_continuous(expand = expansion()) +
   scale_y_continuous(expand = expansion()) +
   theme_void() +
@@ -67,7 +93,7 @@ qrdat <- function(text, ecl = c("L", "M", "Q", "H")) {
 allqr <- bind_rows(
   slides = qrdat(slides_url),
   paper = qrdat(paper_url),
-  `my www` = qrdat(my_url, "Q"), 
+  `my www` = qrdat(my_url, "Q"),
   `{rtestim}` = qrdat("https://dajmcdon.github.io/rtestim"),
   .id = "site"
 ) |>
@@ -79,7 +105,9 @@ ggplot(allqr, aes(x, y, fill = z, alpha = z)) +
   scale_fill_manual(values = c(theme_white, primary), guide = "none") +
   scale_alpha_manual(values = c(0, 1), guide = "none") +
   theme_void() +
-  facet_wrap(~ site, nrow = 1) +
-  theme(text = element_text(color = primary, size = 36, margin = margin(3, 0, 3, 0)))
+  facet_wrap(~site, nrow = 1) +
+  theme(
+    text = element_text(color = primary, size = 36, margin = margin(3, 0, 3, 0))
+  )
 ```
 

@@ -6,8 +6,8 @@
 <script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.37">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Daniel J. McDonald">
   <title>index</title>
@@ -29,7 +29,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-6563a0bbff37ab131af97ef55c3ab1d1.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-23fe8f44c9074736da5dd85e4e3793a4.css">
   <link rel="stylesheet" href="styling/tachyons-minimal.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -128,12 +128,13 @@
     <div class="slides">
 
 
-<section id="section" class="slide level2" data-background-image="gfx/cover-art-1.svg">
+<section id="section" class="slide level2" data-background-image="gfx/cover-art-1.svg" data-footer="false" data-visibility="uncounted" data-hide-slide-number="true">
 <h2></h2>
-<div style="text-align:center; font-family:Gilda Display; font-size:1.8em; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .5); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);">
-<p><span class="primary">Nonparametric estimation of time-varying reproduction numbers</span></p>
+<div style="text-align:center; font-family:Gilda Display; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .6); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);">
+<p><span class="primary" style="font-size:1.8em;">Nonparametric estimation of time-varying reproduction numbers</span></p>
 <p><br></p>
-<p><span class="primary">Daniel J. McDonald</span></p>
+<p><span class="primary" style="font-size:1.6em;">Daniel J. McDonald</span></p>
+<p><span class="primary" style="font-size:1em;">Department of Statistics, The University of British Columbia</span></p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="gfx/qrcodes-1.png" class="quarto-figure quarto-figure-center" height="350"></p>
@@ -141,13 +142,13 @@
 </div>
 </div>
 </section>
-<section id="mathematical-modelling-of-disease-epidemics-is-very-old" class="slide level2">
+<section id="mathematical-modelling-of-disease-epidemics-is-very-old" class="slide level2" style="text-wrap: nowrap;">
 <h2>Mathematical modelling of disease / epidemics is very old</h2>
 <ul>
-<li><p><span class="tertiary">Daniel Bernoulli (1760)</span> - studies inoculation against smallpox</p></li>
-<li><p><span class="tertiary">John Snow (1855)</span> - cholera epidemic in London tied to a water pump</p></li>
-<li><p><span class="tertiary">Ronald Ross (1902)</span> - Nobel Prize in Medicine for work on malaria</p></li>
-<li><p><span class="tertiary">Kermack and McKendrick (1927-1933)</span> - basic epidemic (mathematical) model</p></li>
+<li><span class="tertiary">Daniel Bernoulli (1760)</span> - studies inoculation against smallpox</li>
+<li><span class="tertiary">John Snow (1855)</span> - cholera epidemic in London tied to a water pump</li>
+<li><span class="tertiary">Ronald Ross (1902)</span> - Nobel Prize in Medicine for work on malaria</li>
+<li><span class="tertiary">Kermack and McKendrick (1927-1933)</span> - basic epidemic (mathematical) model</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -183,32 +184,34 @@
 <div class="fragment box-text absolute" style="top: 50px; left: 150px; ">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="gfx/yle-measles.jpg" height="600"></p>
-<figcaption>Source: Katelyn Jetelina, “YLE Newsletter,” 17 March 2025.</figcaption>
+<p><img data-src="gfx/measles-bubble.svg" width="1000"></p>
+<figcaption>Source: JHU Measles Tracking Team Data</figcaption>
 </figure>
 </div>
 </div>
 </section>
-<section id="r_0-is-entirely-retrospective" class="slide level2">
+<section id="r_0-is-entirely-retrospective" class="slide level2" style="text-wrap: nowrap;">
 <h2><span class="math inline">\(R_0\)</span> is entirely retrospective</h2>
 <ul>
 <li><p>It’s a property of the pathogen in a fully susceptible (infinite) population</p></li>
 <li><p>Each outbreak is like a new sample</p></li>
-<li><p>To estimate something like this from data, the “bonehead” way is to</p>
+</ul>
+<p><br></p>
+<p>To estimate something like this from data, the “bonehead” way is to</p>
 <ol type="1">
 <li>Wait until the epidemic is over (no more infections circulating)</li>
 <li>Contact trace the primary infection responsible for each secondary infection</li>
 <li>Take a sample average of the number caused by each primary</li>
 <li>Possibly repeat over many outbreaks</li>
-</ol></li>
-</ul>
+</ol>
 <div class="fragment box-text absolute" style="top: 50px; left: 100px; ">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg" height="500"></p>
+<p><img data-src="gfx/gr4_lrg.jpg" height="500"></p>
 <figcaption>Source: Guerra, et al., “The basic reproduction number (R0) of measles,” (2019).</figcaption>
 </figure>
 </div>
+<!-- https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(17)30307-9/abstract -->
 </div>
 <div class="fragment box-text absolute" style="top: 300px; left: 300px; ">
 <p>Of course no one actually does that</p>
@@ -229,32 +232,30 @@
 <div class="fragment">
 <p>So, for measles, if <span class="math inline">\(R_0\approx 15\)</span>, the disease will die out if immunity is</p>
 <p><span class="math display">\[
-sR_0 \leq 1 \Longrightarrow 1-s \leq 1-1/R_0 \approx 93\%
+sR_0\ \leq\ 1\ \Longrightarrow\ 1-s\ \leq\ 1-\frac{1}{R_0}\ \approx\ 93\%
 \]</span></p>
 </div>
 </section>
 <section class="slide level2">
 
-<iframe data-src="https://epiengage-measles.tacc.utexas.edu" height="850" width="1500">
+<iframe data-src="https://cdcposit.cdc.gov/measles-simulator/" height="850" width="1500">
 </iframe>
 </section>
-<section id="rt-instantaneous-reproduction-number" class="slide level2">
+<section id="rt-instantaneous-reproduction-number" class="slide level2" style="text-wrap: nowrap;">
 <h2><span class="math inline">\(R(t)\)</span> — instantaneous reproduction number</h2>
 <ul>
-<li><p>The effective reproduction number in the middle of an outbreak</p></li>
-<li><p>Some of the population is immune, others are infected, others susceptible</p></li>
+<li>The effective reproduction number in the middle of an outbreak</li>
+<li>Some of the population is immune, others are infected, others susceptible</li>
 </ul>
 <blockquote>
 <p>The expected number of secondary infections at time <span class="math inline">\(t\)</span> caused by an earlier primary infection</p>
 </blockquote>
 <div class="fragment">
-<p><span class="math inline">\(f(a) \geq 0,\ \forall a\)</span> — the rate at which an infection of age <span class="math inline">\(a\)</span> produces new infections</p>
-<p><span class="math display">\[
-\begin{aligned}
-R_0 &amp;= \int_{0}^\infty f(a)\mathsf{d}a, \\
-g(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
-\end{aligned}
-\]</span></p>
+<ul>
+<li><p><span class="math inline">\(f(a) \geq 0,\ \forall a \geq 0\)</span> — the rate at which an infection of age <span class="math inline">\(a\)</span> produces new infections</p></li>
+<li><p><span class="math inline">\(\displaystyle g(a) := \frac{f(a)} {\int_{0}^\infty f(a)\ \mathsf{d}a} = \frac{f(a)}{R_0}.\)</span></p></li>
+<li><p><span class="math inline">\(\displaystyle R_0 := \int_{0}^\infty f(a)\ \mathsf{d}a.\)</span></p></li>
+</ul>
 </div>
 <div class="fragment">
 <p>Can allow <span class="math inline">\(g(t, a)\)</span>, hold this fixed for now.</p>
@@ -272,65 +273,123 @@ g(a) &amp;= \frac{f(a)} {\int_{0}^\infty f(a)\mathsf{d}a} = f(a) / R_0.
 </div>
 </figure>
 </section>
-<section>
-<section id="interlude-on-sir-models" class="title-slide slide level1 center">
-<h1>Interlude on SIR models</h1>
-
+<section id="sir-type-compartmental-models---stochastic-version" class="slide level2 nostretch">
+<h2>SIR-type (compartmental) models - Stochastic Version</h2>
+<div class="flex">
+<div class="w-75">
+<p>Suppose each of N people in a bucket at time t:</p>
+<p><span class="secondary">Susceptible(t)</span> : not sick, but could get sick</p>
+<p><span class="secondary">Infected(t)</span> : sick, can make others sick</p>
+<p><span class="secondary">Removed(t)</span> : recovered or dead; not sick, can’t get sick</p>
+<hr>
+<ul>
+<li class="fragment">During period <span class="math inline">\(h\)</span>, each <span class="math inline">\(S\)</span> meets <span class="math inline">\(kh\)</span> people.</li>
+<li class="fragment">Assume <span class="math inline">\(P( S \textrm{ meets } I \textrm{ and becomes } I ) = c\)</span>.</li>
+<li class="fragment">Then <span class="math inline">\(P( S(t) \rightarrow I(t+h) ) = 1 - (1 - c I(t)  / N )^{hk} \approx kchI(t) / N\)</span>.</li>
+<li class="fragment">Therefore, <span class="math inline">\(I(t+h) | S(t),\ I(t) \sim \textrm{Binom}(S(t),\ kchI(t) / N)\)</span>.</li>
+<li class="fragment">Assume <span class="math inline">\(P( I(t) \rightarrow R(t+h)) = \gamma h,\ \forall t\)</span>.</li>
+<li class="fragment">Then <span class="math inline">\(R(t+h) | I(t) \sim \textrm{Binom}(I(t),\ \gamma h)\)</span>.</li>
+</ul>
+</div>
+<div class="w-25">
+<p><br><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/sir.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="deterministic-sir" class="slide level2">
-<h2>Deterministic SIR</h2>
+<section id="sir-type-compartmental-models---stochastic-version-1" class="slide level2">
+<h2>SIR-type (compartmental) models - Stochastic Version</h2>
+<div class="flex">
+<div class="w-75">
 <p><span class="math display">\[\begin{aligned}
-N &amp;= S(0) + I(0) + R(0)\\
-\frac{dS}{dt} &amp; =  -\frac{\beta}{N} S(t)I(t)\\
-\frac{dI}{dt} &amp; =  \frac{\beta}{N} I(t)S(t) - \gamma I(t)\\
-\frac{dR}{dt} &amp; =  \gamma I(t)
+x(t+h) &amp;\sim  \mathrm{Binom}\left(S(t),\ \frac{\beta}{N} h I(t)\right) = \text{incident infections}\\
+z(t+h) &amp;\sim  \mathrm{Binom}\left(I(t),\ \gamma h\right) = \text{incident recoveries}\\
+S(t+h) &amp; =  S(t) - x(t+h)\\
+I(t+h) &amp; =  I(t) + x(t+h) - z(t+h)\\
+R(t+h) &amp; =  R(t) + z(t+h)
 \end{aligned}\]</span></p>
-<p><span class="math display">\[R_0 = \beta/\gamma.\]</span></p>
-<p><span class="math display">\[R(t) = \frac{\beta S(t)}{\gamma N}.\]</span></p>
+<div class="fragment">
+<hr>
+<p>In the deterministic limit, <span class="math inline">\(h\rightarrow 0\)</span></p>
+<p><span class="math display">\[\begin{aligned}
+\frac{\mathsf{d}}{\mathsf{d}t}S(t) &amp; =  -\frac{\beta}{N} S(t)I(t)\\
+\frac{\mathsf{d}}{\mathsf{d}t}I(t) &amp; =  \frac{\beta}{N} I(t)S(t) - \gamma I(t)\\
+\frac{\mathsf{d}}{\mathsf{d}t}R(t) &amp; =  \gamma I(t)
+\end{aligned}\]</span></p>
+</div>
+</div>
+<div class="w-25">
+<p><br><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="gfx/sir.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="fragment box-text absolute" style="top: 30%; ">
+<p><span class="secondary">THE</span> SIR model is often ambiguous between these.</p>
+<p>Typically, people mean the deterministic, continuous time version.</p>
+</div>
 </section>
-<section id="stochastic-sir" class="slide level2">
-<h2>Stochastic SIR</h2>
+<section id="r_t-in-compartmental-models" class="slide level2">
+<h2><span class="math inline">\(R_t\)</span> in compartmental models</h2>
+<p>There is an equivalence between a compartmental model and the renewal equation.</p>
+<p><span class="math display">\[\begin{aligned}
+R_0 &amp;= \beta\ /\ \gamma\\
+x_{t+1}
+&amp;= \beta \frac{S_{t}}{N} \sum_{k = 0}^t \big[(1-\gamma)^{k}\big] x_{t-k}
+= R_0 \frac{S_{t}}{N} \sum_{k = 0}^t \big[\gamma(1-\gamma)^{k}\big] x_{t-k}
+= R_{t}\sum_{k = 0}^t g(k)x_{t-k}
+\end{aligned}\]</span></p>
 
-<img data-src="gfx/simulate-sir-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<img data-src="gfx/show-sir-Rt-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="rt-and-r_t-renewal-equation" class="slide level2">
 <h2><span class="math inline">\(R(t)\)</span> and <span class="math inline">\(R_t\)</span> — renewal equation</h2>
 <p>Alternatively: rather than working with a particular compartmental model</p>
-<p><span class="math inline">\(R(t)\)</span> is defined implicitly through the <span class="secondary">renewal equation</span></p>
+<p>Define <span class="math inline">\(R(t)\)</span> implicitly through the <span class="secondary">renewal equation</span></p>
 <p><span class="math display">\[
-x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a,
+x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a = R(t)\times (x * g)(t),
 \]</span></p>
 <p>where <span class="math inline">\(x(t)\)</span> are infections at time <span class="math inline">\(t\)</span>.</p>
 <div class="fragment">
 <hr>
 <p>In discrete time,</p>
 <p><span class="math display">\[
-x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
+x_{t+1} = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t\times (x * \widetilde{g})_t.
 \]</span></p>
 </div>
 <div class="fragment">
 <hr>
 <p>And stochasticly,</p>
 <p><span class="math display">\[
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
+\mathbb{E}\big[x_{t+1}\ |\ x_1,\ldots,x_{t}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t\times (x * \widetilde{g})_t.
 \]</span></p>
 <div class="fragment box-text absolute" style="top: 50px; ">
 <p>Most estimators start here: <span class="math display">\[
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
+\mathbb{E}\big[x_{t+1}\ |\ x_1,\ldots,x_{t}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
 \]</span></p>
 <ul>
 <li>Assume <span class="math inline">\(\widetilde{g}\)</span> is known</li>
-<li>Model <span class="math inline">\(x_t\ |\ x_1,\ldots,x_{t-1}\)</span> as Poisson or Negative Binomial</li>
+<li>Model <span class="math inline">\(x_{t+1}\ |\ x_1,\ldots,x_{t}\)</span> as Poisson or Negative Binomial</li>
 <li>Turn some inferential crank</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="r_t-for-covid-19-in-the-us" class="slide level2">
-<h2><span class="math inline">\(R_t\)</span> for COVID-19 in the US</h2>
-<iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/state-rt-timeseries/chart-covid.html#covid-United%20States" height="700" width="1400">
-</iframe>
-<p><span class="grey" style="font-size:0.7em;">Source: US CDC Center for Forecasting Analytics</span></p>
-</section></section>
+<section id="r_t-for-influenza" class="slide level2">
+<h2><span class="math inline">\(R_t\)</span> for Influenza</h2>
+<!-- No longer functional
+Raw data: https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/
+<iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/flu_data.json" height=700 width=1400></iframe>
+-->
+
+<img data-src="gfx/cdc-influenza-rt-1.svg" class="quarto-figure quarto-figure-center r-stretch"><p><span class="grey" style="font-size:0.7em;">Source: US CDC Center for Forecasting Analytics</span></p>
+</section>
 <section>
 <section id="estimating-r_t" class="title-slide slide level1 inverse center">
 <h1>Estimating <span class="math inline">\(R_t\)</span></h1>
@@ -347,7 +406,7 @@ x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 </figure>
 </div>
 </figure>
-<div class="fragment box-text absolute" style="top: 150px; left: 150px; ">
+<div class="fragment box-text absolute" style="text-wrap: nowrap;top: 150px; left: 150px; ">
 <ul>
 <li>Replace <span class="secondary">infections</span> with <span class="tertiary">cases</span></li>
 <li>Replace <span class="secondary">generation interval</span> with <span class="tertiary">serial interval</span></li>
@@ -362,12 +421,10 @@ x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
 <img data-src="gfx/Incubation_delay.svg" class="r-stretch"></section>
 <section id="standard-model-for-r_t" class="slide level2">
 <h2>Standard model for <span class="math inline">\(R_t\)</span></h2>
-<p><span class="math display">\[
-\begin{aligned}
-\eta_t &amp;= \sum_{a=0}^\infty y_{t-a}p_a,\\ \\
+<p><span class="math display">\[\begin{aligned}
+\eta_t &amp;= \sum_{a=1}^\infty y_{t-a}p_a,\\ \\
 y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 <ul>
 <li>Using <span class="math inline">\(y\)</span> instead of <span class="math inline">\(x\)</span> to be cases or hospitalizations or deaths, <span class="secondary">incidence</span></li>
 <li>Using <span class="math inline">\(p\)</span> for serial interval distribution (discretized)</li>
@@ -378,18 +435,18 @@ y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 <div class="fragment box-text absolute" style="top: 50px; ">
 <ul>
 <li><p>This isn’t going to give you “<span class="math inline">\(R_t\)</span>”, because you didn’t use incident infections.</p></li>
-<li><p>At least, the timing is wrong, because the observable happend <em>after</em> infection.</p></li>
-<li><p>Deconvolve incidence first.</p></li>
+<li><p>At least, the timing is wrong, because the observable happened <em>after</em> infection.</p></li>
+<li><p>Better to deconvolve incidence first (<a href="https://doi.org/10.1101/2025.09.01.25334793">LSM2026</a>).</p></li>
 </ul>
 <p><span class="claret">More on this later.</span></p>
 </div>
 </section>
-<section id="the-state-of-the-art-you-saw-some-of-these-already" class="slide level2">
-<h2>The state of the art (you saw some of these already)</h2>
+<section id="the-state-of-the-art" class="slide level2">
+<h2>The state of the art</h2>
 <div class="flex">
-<div class="w-40">
+<div class="w-40" style="text-wrap: nowrap;">
 <ol type="1">
-<li><code>{EpiEstim}</code> (Cori, et al., 2013)</li>
+<li><code>{EpiEstim}</code> <a href="https://doi.org/10.1093/aje/kwt133">CFFC2013</a></li>
 </ol>
 </div>
 <div class="w-60">
@@ -401,9 +458,9 @@ y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 </div>
 </div>
 <div class="flex">
-<div class="w-40">
+<div class="w-40" style="text-wrap: nowrap;">
 <ol start="2" type="1">
-<li><code>{EpiFilter}</code> (Parag, 2020)</li>
+<li><code>{EpiFilter}</code> <a href="https://doi.org/10.1371/journal.pcbi.1009347.">Parag 2020</a></li>
 </ol>
 </div>
 <div class="w-60">
@@ -415,9 +472,9 @@ y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 </div>
 </div>
 <div class="flex">
-<div class="w-40">
+<div class="w-40" style="text-wrap: nowrap;">
 <ol start="3" type="1">
-<li><code>{EpiLPS}</code> (Gressani, et al., 2022)</li>
+<li><code>{EpiLPS}</code> <a href="https://doi.org/10.1002/bimj.202200024">GFH2023</a></li>
 </ol>
 </div>
 <div class="w-60">
@@ -429,10 +486,8 @@ y_t\ |\ y_1,\ldots,y_{t-1} &amp;\sim \textrm{Poisson}(R_t\eta_t).
 </ul>
 </div>
 </div>
-<div class="fragment absolute box-text" style="top: 50px; ">
-<ol start="4" type="1">
-<li><code>{EpiNow2}</code> (CDC + CFA, Abbott, et al., 2023ish)</li>
-</ol>
+<div class="fragment absolute box-text" style="text-wrap: nowrap;top: 50px; ">
+<p><code>{EpiNow2}</code> <a href="https://epiforecasts.io/EpiNow2/">CDC + CFA</a>, <a href="https://doi.org/10.12688/wellcomeopenres.16006.2">Abbott, et al., 2023</a></p>
 <ul>
 <li>Negative Binomial likelihood</li>
 <li>Smoothness via a GP prior</li>
@@ -528,8 +583,7 @@ D^{(2)} &amp;= \begin{bmatrix}
 <h2>Polynomial order, <span class="math inline">\(k=2\)</span></h2>
 <div class="flex">
 <div class="w-40">
-<p><br><br> <span class="math display">\[
-\begin{aligned}
+<p><br><br> <span class="math display">\[\begin{aligned}
 D^{(3)} &amp;= \begin{bmatrix}
 -1 &amp; 3 &amp; -3 &amp; 1  &amp; &amp; \\
 &amp; -1 &amp; 3 &amp; -3 &amp;1 &amp; \\
@@ -538,8 +592,7 @@ D^{(3)} &amp;= \begin{bmatrix}
 \end{bmatrix} \\ \\
 &amp;= D^{(1)}D^{(2)}\\ \\
 &amp;\in \mathbb{R}^{(n-k-1)\times n}
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 </div>
 <div class="w-60">
 <div class="cell" data-layout-align="center">
@@ -556,65 +609,58 @@ D^{(3)} &amp;= \begin{bmatrix}
 </section>
 <section id="estimation-algorithm" class="slide level2">
 <h2>Estimation algorithm</h2>
-<p><span class="math display">\[
-\mathop{\mathrm{minimize}}_\theta\; \eta^{\mathsf{T}}\exp(\theta) -
-\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1
-\]</span></p>
+<p><span class="math display">\[\mathop{\mathrm{minimize}}_\theta\; \eta^{\mathsf{T}}\exp(\theta) -
+\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1\]</span></p>
 </section>
 <section id="estimation-algorithm-1" class="slide level2">
 <h2>Estimation algorithm</h2>
-<p><span class="math display">\[
-\mathop{\mathrm{minimize}}_{\theta,\ {\color{BurntOrange} \alpha}}\;
+<p><span class="math display">\[\mathop{\mathrm{minimize}}_{\theta,\ {\color{BurntOrange} \alpha}}\;
 \eta^{\mathsf{T}}\exp(\theta) -
 \mathbf{y}^{\mathsf{T}}\theta +
 \lambda\Vert D^{(1)}{\color{BurntOrange} \alpha}\Vert_1\quad
-{\color{BurntOrange} \textrm{subject to}\quad \alpha = D^{(k)}\theta}
-\]</span></p>
+{\color{BurntOrange} \textrm{subject to}\quad \alpha = D^{(k)}\theta}\]</span></p>
 </section>
 <section id="estimation-algorithm-2" class="slide level2">
 <h2>Estimation algorithm</h2>
-<p><span class="math display">\[
-\mathop{\mathrm{minimize}}_{\theta,\ \alpha}\;
+<p><span class="math display">\[\mathop{\mathrm{minimize}}_{\theta,\ \alpha}\;
 \eta^{\mathsf{T}}\exp(\theta) -
 \mathbf{y}^{\mathsf{T}}\theta +
 \lambda\Vert D^{(1)} \alpha\Vert_1\quad
-\textrm{subject to}\quad \alpha = D^{(k)}\theta
-\]</span></p>
+\textrm{subject to}\quad \alpha = D^{(k)}\theta\]</span></p>
 <br>
 <hr>
 <p><br></p>
 <p>Alternating direction method of multipliers (ADMM)</p>
-<p><span class="math display">\[
-\begin{aligned}
-\theta &amp;\longleftarrow \mathop{\mathrm{argmin}}_\theta\ \eta^{\mathsf{T}}\exp(\theta) -
+<p><span class="math display">\[\begin{aligned}
+\theta
+&amp;\longleftarrow \mathop{\mathrm{argmin}}_\theta\ \eta^{\mathsf{T}}\exp(\theta) -
 \mathbf{y}^{\mathsf{T}}\theta +
+\frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
+\alpha
+&amp;\longleftarrow \mathop{\mathrm{argmin}}_\alpha\ \lambda\Vert D^{(1)} \alpha \Vert_1 +
   \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
-\alpha &amp;\longleftarrow \mathop{\mathrm{argmin}}_\alpha\ \lambda\Vert D^{(1)} \alpha \Vert_1 +
-  \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
-u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
-\end{aligned}
-\]</span></p>
+u
+&amp;\longleftarrow u + D^{(k)}\theta - \alpha
+\end{aligned}\]</span></p>
 </section>
 <section id="estimation-algorithm-3" class="slide level2">
 <h2>Estimation algorithm</h2>
-<p><span class="math display">\[
-\mathop{\mathrm{minimize}}_{\theta,\ \alpha}\;
+<p><span class="math display">\[\mathop{\mathrm{minimize}}_{\theta,\ \alpha}\;
 \eta^{\mathsf{T}}\exp(\theta) -
 \mathbf{y}^{\mathsf{T}}\theta +
 \lambda\Vert D^{(1)} \alpha\Vert_1\quad
-\textrm{subject to}\quad \alpha = D^{(k)}\theta
-\]</span></p>
+\textrm{subject to}\quad \alpha = D^{(k)}\theta\]</span></p>
 <br>
 <hr>
 <p><br></p>
 <p>Alternating direction method of multipliers (ADMM)</p>
-<p><span class="math display">\[
-\begin{aligned}
-\theta &amp;\longleftarrow  {\color{Cerulean}\textrm{Proximal Newton / Fisher Scoring}} \\
-\alpha &amp;\longleftarrow  {\color{BurntOrange}\textrm{Fused Lasso Signal Approximator}} \\
+<p><span class="math display">\[\begin{aligned}
+\theta &amp;\longleftarrow  
+\Big[{\color{Cerulean}\textrm{Proximal Newton / Fisher Scoring}}\Big] \\
+\alpha &amp;\longleftarrow  
+\Big[{\color{BurntOrange}\textrm{Fused Lasso Signal Approximator}}\Big] \\
 u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
-\end{aligned}
-\]</span></p>
+\end{aligned}\]</span></p>
 <div class="fragment">
 <p>Solve sequentially for <span class="math inline">\(\Vert (D^{\dagger})^{\mathsf{T}}(\eta - y)\Vert_\infty = \lambda_1 &gt; \cdots &gt; \lambda_M=\epsilon \lambda_1\)</span>.</p>
 </div>
@@ -713,8 +759,8 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 </div>
 </div>
 </div>
-<div class="fragment">
-<p>The solution is an element of the space of <span class="tertiary"><em>discrete splines of order <span class="math inline">\(k\)</span></em></span> (Tibshirani, 2020)</p>
+<div class="fragment" style="text-wrap: nowrap;">
+<p>The solution is an element of the space of <span class="tertiary"><em>discrete splines of order <span class="math inline">\(k\)</span></em></span> <a href="https://www.stat.berkeley.edu/~ryantibs/papers/dspline.pdf">Tibshirani 2020</a></p>
 <ul>
 <li>Lets us interpolate (and extrapolate) to off-observation points</li>
 <li>Lets us handle uneven spacing</li>
@@ -770,7 +816,7 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 <section id="summary-and-collaborators" class="slide level2">
 <h2>Summary and collaborators</h2>
 <div class="flex">
-<div class="w-40">
+<div class="w-50" style="text-wrap: nowrap;">
 <p><span class="secondary">Contributions</span></p>
 <ul>
 <li>Framework for <span class="math inline">\(R_t\)</span> estimation</li>
@@ -789,11 +835,8 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 <li>Use relationship with growth rate</li>
 </ul>
 </div>
-<div class="w-60 fragment">
+<div class="w-50 fragment">
 <p><span class="secondary">Collaborators and funding</span></p>
-<div>
-
-</div>
 <div class="quarto-layout-panel" data-layout-nrow="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
@@ -809,7 +852,7 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="https://www.nserc-crsng.gc.ca/img/logos/img-logo2-en.png" class="quarto-figure quarto-figure-center" width="300"></p>
+<p><img data-src="gfx/NSERC_RGB.svg" class="quarto-figure quarto-figure-center" width="300"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
@@ -1075,197 +1118,180 @@ u &amp;\longleftarrow u + D^{(k)}\theta - \alpha
     </script>
 
     <script id="quarto-html-after-body" type="application/javascript">
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-      const toggleBodyColorMode = (bsSheetEl) => {
-        const mode = bsSheetEl.getAttribute("data-mode");
-        const bodyEl = window.document.querySelector("body");
-        if (mode === "dark") {
-          bodyEl.classList.add("quarto-dark");
-          bodyEl.classList.remove("quarto-light");
-        } else {
-          bodyEl.classList.add("quarto-light");
-          bodyEl.classList.remove("quarto-dark");
-        }
-      }
-      const toggleBodyColorPrimary = () => {
-        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-        if (bsSheetEl) {
-          toggleBodyColorMode(bsSheetEl);
-        }
-      }
-      toggleBodyColorPrimary();  
-      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-      tabsets.forEach(function(tabset) {
-        const tabby = new Tabby('#' + tabset.id);
-      });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
           }
+          return false;
         }
-        return false;
-      }
-      const onCopySuccess = function(e) {
-        // button target
-        const button = e.trigger;
-        // don't keep focus
-        button.blur();
-        // flash "checked"
-        button.classList.add('code-copy-button-checked');
-        var currentTitle = button.getAttribute("title");
-        button.setAttribute("title", "Copied!");
-        let tooltip;
-        if (window.bootstrap) {
-          button.setAttribute("data-bs-toggle", "tooltip");
-          button.setAttribute("data-bs-placement", "left");
-          button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
-              customClass: "code-copy-button-tooltip",
-              offset: [0, -8]});
-          tooltip.show();    
-        }
-        setTimeout(function() {
-          if (tooltip) {
-            tooltip.hide();
-            button.removeAttribute("data-bs-title");
-            button.removeAttribute("data-bs-toggle");
-            button.removeAttribute("data-bs-placement");
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
           }
-          button.setAttribute("title", currentTitle);
-          button.classList.remove('code-copy-button-checked');
-        }, 1000);
-        // clear code selection
-        e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
           for (const childEl of codeEl.children) {
             if (isCodeAnnotation(childEl)) {
               childEl.remove();
             }
           }
           return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
-      });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp('/' + window.location.host + '/');
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+                // default icon
+                link.classList.add("external");
             }
-              // target, if specified
-              link.setAttribute("target", "_blank");
-              if (link.getAttribute("rel") === null) {
-                link.setAttribute("rel", "noopener");
-              }
-              // default icon
-              link.classList.add("external");
           }
-        }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-        const config = {
-          allowHTML: true,
-          maxWidth: 500,
-          delay: 100,
-          arrow: false,
-          appendTo: function(el) {
-              return el.closest('section.slide') || el.parentElement;
-          },
-          interactive: true,
-          interactiveBorder: 10,
-          theme: 'light-border',
-          placement: 'bottom-start',
-        };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
-          config['offset'] = [0,0];
-          config['maxWidth'] = 700;
-        window.tippy(el, config); 
-      }
-      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-      for (var i=0; i<noterefs.length; i++) {
-        const ref = noterefs[i];
-        tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-          try { href = new URL(href).hash; } catch {}
-          const id = href.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
           }
-        });
-      }
-      const findCites = (el) => {
-        const parentEl = el.parentElement;
-        if (parentEl) {
-          const cites = parentEl.dataset.cites;
-          if (cites) {
-            return {
-              el,
-              cites: cites.split(' ')
-            };
-          } else {
-            return findCites(el.parentElement)
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
           }
-        } else {
-          return undefined;
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
         }
-      };
-      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-      for (var i=0; i<bibliorefs.length; i++) {
-        const ref = bibliorefs[i];
-        const citeInfo = findCites(ref);
-        if (citeInfo) {
-          tippyHover(citeInfo.el, function() {
-            var popup = window.document.createElement('div');
-            citeInfo.cites.forEach(function(cite) {
-              var citeDiv = window.document.createElement('div');
-              citeDiv.classList.add('hanging-indent');
-              citeDiv.classList.add('csl-entry');
-              var biblioDiv = window.document.getElementById('ref-' + cite);
-              if (biblioDiv) {
-                citeDiv.innerHTML = biblioDiv.innerHTML;
-              }
-              popup.appendChild(citeDiv);
-            });
-            return popup.innerHTML;
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
           });
         }
-      }
-    });
-    </script>
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
     
 
 </body></html>

@@ -8,30 +8,29 @@ format: revealjs
 
 {{< include _setup.qmd >}}
 
-## {background-image="gfx/cover-art-1.svg"}
+## {background-image="gfx/cover-art-1.svg" footer=false visibility="uncounted" data-hide-slide-number="true"}
 
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\minimize}{minimize}
 
 
-::: {style="text-align:center; font-family:Gilda Display; font-size:1.8em; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .5); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);"}
-[{{< meta talk-title >}}]{.primary} 
+::: {style="text-align:center; font-family:Gilda Display; padding: 1em 0.5em 0em; background-color: rgba(255, 255, 255, .6); backdrop-filter: blur(5px); box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .5);"}
+[{{< meta talk-title >}}]{style="font-size:1.8em;" .primary} 
 
 <br>
 
-[{{< meta author >}}]{.primary}
+[{{< meta author >}}]{style="font-size:1.6em;" .primary}
+
+[Department of Statistics, The University of British Columbia]{style="font-size:1em;" .primary}
 
 ![](gfx/qrcodes-1.png){height="350px" fig-align="center"}
 :::
 
-## Mathematical modelling of disease / epidemics is very old 
+## Mathematical modelling of disease / epidemics is very old {style="text-wrap: nowrap;"}
 
 * [Daniel Bernoulli (1760)]{.tertiary} - studies inoculation against smallpox
-
 * [John Snow (1855)]{.tertiary} - cholera epidemic in London tied to a water pump
-
 * [Ronald Ross (1902)]{.tertiary} - Nobel Prize in Medicine for work on malaria
-
 * [Kermack and McKendrick (1927-1933)]{.tertiary} - basic epidemic (mathematical) model
 
 ![Source: Shiode, et al., "The mortality rates and the space-time patterns of John Snow’s cholera epidemic map," (2015)](https://media.springernature.com/full/springer-static/image/art%3A10.1186%2Fs12942-015-0011-y/MediaObjects/12942_2015_11_Fig1_HTML.gif?as=webp){height=400px fig-align="center"}
@@ -66,27 +65,31 @@ Dates at least to [Alfred Lotka (1920s)]{.tertiary} and others (Feller, Blackwel
 
 ::: {.fragment .box-text .absolute top=50 left=150}
 
-![JHU Measles Tracking Team Data](gfx/measles-bubble.svg){width=1000}
+![Source: JHU Measles Tracking Team Data](gfx/measles-bubble.svg){width=1000}
 
 :::
 
-## $R_0$ is entirely retrospective
+## $R_0$ is entirely retrospective {style="text-wrap: nowrap;"}
 
 * It's a property of the pathogen in a fully susceptible (infinite) population
 
 * Each outbreak is like a new sample
 
+<br>
 
-* To estimate something like this from data, the "bonehead" way is to 
-  1. Wait until the epidemic is over (no more infections circulating)
-  2. Contact trace the primary infection responsible for each secondary infection
-  3. Take a sample average of the number caused by each primary
-  4. Possibly repeat over many outbreaks
+To estimate something like this from data, the "bonehead" way is to 
+
+1. Wait until the epidemic is over (no more infections circulating)
+2. Contact trace the primary infection responsible for each secondary infection
+3. Take a sample average of the number caused by each primary
+4. Possibly repeat over many outbreaks
   
 
 ::: {.fragment .box-text .absolute top=50 left=100}
 
-![Source: Guerra, et al., "The basic reproduction number (R0) of measles," (2019).](https://www.thelancet.com/cms/10.1016/S1473-3099(17)30307-9/asset/daf522aa-ab16-4df8-ab69-212fb115a975/main.assets/gr4_lrg.jpg){height=500}
+![Source: Guerra, et al., "The basic reproduction number (R0) of measles," (2019).](gfx/gr4_lrg.jpg){height=500}
+
+<!-- https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(17)30307-9/abstract -->
 
 :::
 
@@ -130,27 +133,25 @@ $$
 
 <iframe data-src=https://cdcposit.cdc.gov/measles-simulator/ height=850 width=1500></iframe>
 
-## $R(t)$ --- instantaneous reproduction number
+## $R(t)$ --- instantaneous reproduction number {style="text-wrap: nowrap;"}
 
 * The effective reproduction number in the middle of an outbreak
-
 * Some of the population is immune, others are infected, others susceptible
 
 > The expected number of secondary infections at time $t$ caused by an earlier primary
-infection
+> infection
 
-. . .
+::: {.fragment}
+* $f(a) \geq 0,\ \forall a \geq 0$ --- the rate at which an infection of age $a$ produces new infections
 
-$f(a) \geq 0,\ \forall a$ --- the rate at which an infection of age $a$ produces new infections
+* $\displaystyle g(a) := \frac{f(a)} {\int_{0}^\infty f(a)\ \mathsf{d}a} = \frac{f(a)}{R_0}.$
 
-$$\begin{aligned}
-R_0 &= \int_{0}^\infty f(a)\ \mathsf{d}a, \\
-g(a) &= \frac{f(a)} {\int_{0}^\infty f(a)\ \mathsf{d}a} = \frac{f(a)}{R_0}.
-\end{aligned}$$
+* $\displaystyle R_0 := \int_{0}^\infty f(a)\ \mathsf{d}a.$
+::: 
 
-. . .
-
+::: {.fragment}
 Can allow $g(t, a)$, hold this fixed for now. 
+:::
 
 ## The generation interval distribution $g(a)$
 
@@ -159,26 +160,104 @@ Can allow $g(t, a)$, hold this fixed for now.
 ![Source: US CDC Center for Forecasting Analytics, "Behind the Model."](gfx/infectiousness-over-time-dfe.jpeg)
 </figure>
 
+## SIR-type (compartmental) models - Stochastic Version {.nostretch}
 
-# Interlude on SIR models
 
-## Deterministic SIR
+::: flex
+::: w-75
+
+Suppose each of N people in a bucket at time t:
+
+[Susceptible(t)]{.secondary} : not sick, but could get sick
+
+[Infected(t)]{.secondary} : sick, can make others sick
+
+[Removed(t)]{.secondary} : recovered or dead; not sick, can't get sick
+
+ ---
+
+::: {.incremental}
+* During period $h$, each $S$ meets $kh$ people.
+* Assume $P( S \textrm{ meets } I \textrm{ and becomes } I ) = c$.
+* Then $P( S(t) \rightarrow I(t+h) ) = 1 - (1 - c I(t)  / N )^{hk} \approx kchI(t) / N$.
+* Therefore, $I(t+h) | S(t),\ I(t) \sim \textrm{Binom}(S(t),\ kchI(t) / N)$.
+* Assume $P( I(t) \rightarrow R(t+h)) = \gamma h,\ \forall t$.
+* Then $R(t+h) | I(t) \sim \textrm{Binom}(I(t),\ \gamma h)$.
+:::
+
+:::
+
+::: w-25
+
+<br><br>
+
+![](gfx/sir.svg){fig-align="center"}
+
+:::
+:::
+
+
+
+
+## SIR-type (compartmental) models - Stochastic Version
+
+::: flex
+::: w-75
+
 
 $$\begin{aligned}
-N &= S(0) + I(0) + R(0)\\
-\frac{dS}{dt} & =  -\frac{\beta}{N} S(t)I(t)\\
-\frac{dI}{dt} & =  \frac{\beta}{N} I(t)S(t) - \gamma I(t)\\
-\frac{dR}{dt} & =  \gamma I(t)
+x(t+h) &\sim  \mathrm{Binom}\left(S(t),\ \frac{\beta}{N} h I(t)\right) = \text{incident infections}\\
+z(t+h) &\sim  \mathrm{Binom}\left(I(t),\ \gamma h\right) = \text{incident recoveries}\\
+S(t+h) & =  S(t) - x(t+h)\\
+I(t+h) & =  I(t) + x(t+h) - z(t+h)\\
+R(t+h) & =  R(t) + z(t+h)
 \end{aligned}$$
 
-$$R_0 = \beta/\gamma.$$
+::: {.fragment}
+ ---
 
-$$R(t) = \frac{\beta S(t)}{\gamma N}.$$
+In the deterministic limit, $h\rightarrow 0$
 
-## Stochastic SIR
+$$\begin{aligned}
+\frac{\mathsf{d}}{\mathsf{d}t}S(t) & =  -\frac{\beta}{N} S(t)I(t)\\
+\frac{\mathsf{d}}{\mathsf{d}t}I(t) & =  \frac{\beta}{N} I(t)S(t) - \gamma I(t)\\
+\frac{\mathsf{d}}{\mathsf{d}t}R(t) & =  \gamma I(t)
+\end{aligned}$$
+:::
 
-```{r simulate-sir}
+:::
 
+::: w-25
+
+<br><br>
+
+![](gfx/sir.svg){fig-align="center"}
+
+:::
+:::
+
+::: {.fragment .box-text .absolute top=30%}
+
+[THE]{.secondary} SIR model is often ambiguous between these.
+
+Typically, people mean the deterministic, continuous time version.
+:::
+
+
+## $R_t$ in compartmental models
+
+There is an equivalence between a compartmental model and the renewal equation.
+
+$$\begin{aligned}
+R_0 &= \beta\ /\ \gamma\\
+x_{t+1} 
+&= \beta \frac{S_{t}}{N} \sum_{k = 0}^t \big[(1-\gamma)^{k}\big] x_{t-k} 
+= R_0 \frac{S_{t}}{N} \sum_{k = 0}^t \big[\gamma(1-\gamma)^{k}\big] x_{t-k} 
+= R_{t}\sum_{k = 0}^t g(k)x_{t-k}
+\end{aligned}$$
+
+```{r show-sir-Rt}
+#| fig-width: 10
 sim_SIR <- function(N = 1e3, beta = .3, gamma = .2, i0 = 3) {
   TT <- N
   stopifnot(gamma > 0, gamma < 1)
@@ -201,29 +280,41 @@ sim_SIR <- function(N = 1e3, beta = .3, gamma = .2, i0 = 3) {
     mutate(time = row_number(), Rt = (beta * S) / (gamma * N))
 }
 
+
 set.seed(12345)
-out <- sim_SIR()
-comp <- out |> select(S:R, time) |> pivot_longer(-time) |>
-  ggplot(aes(time, value, colour = name)) +
+sir_sim <- sim_SIR()
+sir_sim <- pivot_longer(sir_sim, c(S, I, R, Rt, infections)) |>
+  mutate(type = case_when(
+    name %in% c("S", "I", "R") ~ "compartmental model",
+    name == "Rt" ~ "Rt",
+    name == "infections" ~ "incident infections"
+  ))
+
+p1 <- sir_sim |> 
+  filter(type == "compartmental model") |>
+  mutate(label = if_else(time == 100, name, NA_character_)) |>
+  ggplot(aes(time, value, color = fct_relevel(name, "S", "I", "R"))) +
   geom_line() +
-  theme_bw() + ylab("Prevalence") +
-  theme(plot.background = element_blank()) +
-  scale_y_continuous(expand = expansion(0)) +
-  scale_x_continuous(expand = expansion(0)) +
-  scale_color_brewer(palette = "Dark2", name = "")
+  scale_color_delphi(name = "") +
+  scale_y_continuous(expand = expansion(c(0, 0.05)), name = "Prevalence (compartment)") +
+  ggrepel::geom_text_repel(aes(label = label), nudge_y = 30) +
+  scale_x_continuous(expand = expansion(), name = "") +
+  theme(legend.position = "none")
 
-rt_inf <- out |> select(infections, Rt, time) |>
-  ggplot(aes(time)) +
-  geom_line(aes(y = Rt), colour = secondary) +
-  geom_hline(yintercept = 1) +
-  geom_segment(aes(y = 0, yend = infections / max(infections) * 3 / 2),
-   colour = fourth_colour) +
-  theme_bw() + ylab("Rt / scaled incident infections") +
-  theme(plot.background = element_blank()) +
-  scale_y_continuous(expand = expansion(c(0, 0.05))) +
-  scale_x_continuous(expand = expansion(0))
+p2 <- ggplot(sir_sim |> filter(type == "incident infections")) +
+  geom_segment(aes(time, y = 0, yend = value), color = fourth_colour) +
+  scale_y_continuous(
+    expand = expansion(c(0, 0.05)), name = "Incident infections"
+  ) +
+  scale_x_continuous(expand = expansion(), name = "")
 
-cowplot::plot_grid(comp, rt_inf)
+p3 <- ggplot(sir_sim |> filter(type == "Rt")) +
+  geom_line(aes(time, value), colour = fifth_colour) +
+  scale_y_continuous(expand = expansion(c(0, 0.05)), name = "Rt") +
+  scale_x_continuous(expand = expansion(), name = "") +
+  geom_hline(yintercept = 1)
+
+cowplot::plot_grid(p1, p2, p3, align = "h", axis = "tb", nrow = 1)
 ```
 
 
@@ -231,10 +322,10 @@ cowplot::plot_grid(comp, rt_inf)
 
 Alternatively: rather than working with a particular compartmental model
 
-$R(t)$ is defined implicitly through the [renewal equation]{.secondary}
+Define $R(t)$ implicitly through the [renewal equation]{.secondary}
 
 $$
-x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a,
+x(t) = R(t)\int_0^\infty x(t-a)g(a)\mathsf{d}a = R(t)\times (x * g)(t),
 $$
 
 where $x(t)$ are infections at time $t$.
@@ -246,7 +337,7 @@ where $x(t)$ are infections at time $t$.
 In discrete time, 
 
 $$
-x_t = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
+x_{t+1} = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t\times (x * \widetilde{g})_t.
 $$
 
 . . .
@@ -256,28 +347,47 @@ $$
 And stochasticly,
 
 $$
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t (x * \widetilde{g}).
+\mathbb{E}\big[x_{t+1}\ |\ x_1,\ldots,x_{t}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a = R_t\times (x * \widetilde{g})_t.
 $$
 
 
 ::: {.fragment .box-text .absolute top=50}
 Most estimators start here:
 $$
-\mathbb{E}\big[x_t\ |\ x_1,\ldots,x_{t-1}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
+\mathbb{E}\big[x_{t+1}\ |\ x_1,\ldots,x_{t}\big] = R_t\sum_{a=0}^\infty x_{t-a}\widetilde{g}_a.
 $$
 
 * Assume $\widetilde{g}$ is known
-* Model $x_t\ |\ x_1,\ldots,x_{t-1}$ as Poisson or Negative Binomial
+* Model $x_{t+1}\ |\ x_1,\ldots,x_{t}$ as Poisson or Negative Binomial
 * Turn some inferential crank
 
 :::
 
-## $R_t$ for COVID-19 in the US
+## $R_t$ for Influenza
 
 <!-- No longer functional
 Raw data: https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/
 <iframe data-src="https://www.cdc.gov/cfa-modeling-and-forecasting/rt-estimates/flu_data.json" height=700 width=1400></iframe>
 -->
+
+```{r cdc-influenza-rt}
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: "center"
+cdc_rt_url <- "https://www.cdc.gov/wcms/vizdata/cfa/RtEstimates/flu/flu_timeseries_data.csv"
+cdcrt <- read_csv(cdc_rt_url) |>
+  filter(state_abb %in% c("CA", "US"))
+
+ggplot(cdcrt, aes(date)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = secondary, alpha = .5) +
+  geom_line(aes(y = median), colour = primary) +
+  geom_hline(yintercept = 1, colour = tertiary) +
+  facet_wrap(~state) +
+  scale_x_date(expand = expansion(0), date_breaks = "1 month", date_labels = "%B") +
+  ylab("Estimated Rt for influenza\nwith 95% confidence band") +
+  xlab("Infection date")
+```
+
 
 [Source: US CDC Center for Forecasting Analytics]{.grey style="font-size:0.7em;"}
 
@@ -291,7 +401,7 @@ $x_t$ is [Infections]{.secondary}, but we don't ever see those
 ![Source: US CDC Center for Forecasting Analytics, "Behind the Model."](https://www.cdc.gov/cfa-behind-the-model/media/images/2024/10/Fig-6_Sept2024_update.jpg)
 </figure>
 
-::: {.fragment .box-text .absolute top=150 left=150}
+::: {.fragment .box-text .absolute top=150 left=150 style="text-wrap: nowrap;"}
 
 * Replace [infections]{.secondary} with [cases]{.tertiary}
 * Replace [generation interval]{.secondary} with [serial interval]{.tertiary}
@@ -308,12 +418,10 @@ $x_t$ is [Infections]{.secondary}, but we don't ever see those
 
 ## Standard model for $R_t$
 
-$$
-\begin{aligned}
-\eta_t &= \sum_{a=0}^\infty y_{t-a}p_a,\\ \\
+$$\begin{aligned}
+\eta_t &= \sum_{a=1}^\infty y_{t-a}p_a,\\ \\
 y_t\ |\ y_1,\ldots,y_{t-1} &\sim \textrm{Poisson}(R_t\eta_t).
-\end{aligned}
-$$
+\end{aligned}$$
 
 * Using $y$ instead of $x$ to be cases or hospitalizations or deaths, [incidence]{.secondary}
 * Using $p$ for serial interval distribution (discretized)
@@ -324,20 +432,20 @@ $$
 ::: {.fragment .box-text .absolute top=50}
 * This isn't going to give you "$R_t$", because you didn't use incident infections.
 
-* At least, the timing is wrong, because the observable happend _after_ infection.
+* At least, the timing is wrong, because the observable happened _after_ infection.
 
-* Deconvolve incidence first.
+* Better to deconvolve incidence first ([LSM2026](https://doi.org/10.1101/2025.09.01.25334793)).
 
 [More on this later.]{.claret}
 
 :::
 
 
-## The state of the art (you saw some of these already)
+## The state of the art
 
 ::: flex
-::: w-40
-1. `{EpiEstim}` (Cori, et al., 2013) 
+::: {.w-40 style="text-wrap: nowrap;"}
+1. `{EpiEstim}` [CFFC2013](https://doi.org/10.1093/aje/kwt133)
 :::
 ::: w-60
 - Gamma prior on $R_t$, but use a trailing window
@@ -347,8 +455,8 @@ $$
 :::
 
 ::: flex
-::: w-40
-2. `{EpiFilter}` (Parag, 2020)
+::: {.w-40 style="text-wrap: nowrap;"}
+2. `{EpiFilter}` [Parag 2020](https://doi.org/10.1371/journal.pcbi.1009347.)
 :::
 ::: w-60
 - State space model
@@ -358,8 +466,8 @@ $$
 :::
 
 ::: flex
-::: w-40
-3. `{EpiLPS}` (Gressani, et al., 2022)
+::: {.w-40 style="text-wrap: nowrap;"}
+3. `{EpiLPS}` [GFH2023](https://doi.org/10.1002/bimj.202200024)
 :::
 ::: w-60
 - Negative Binomial likelihood
@@ -369,8 +477,8 @@ $$
 :::
 :::
 
-::: {.fragment .absolute .box-text top=50}
-4. `{EpiNow2}` (CDC + CFA, Abbott, et al., 2023ish)
+::: {.fragment .absolute .box-text top=50 style="text-wrap: nowrap;"}
+`{EpiNow2}` [CDC + CFA](https://epiforecasts.io/EpiNow2/), [Abbott, et al., 2023](https://doi.org/10.12688/wellcomeopenres.16006.2)
 
 * Negative Binomial likelihood
 * Smoothness via a GP prior
@@ -510,8 +618,7 @@ ggplot(mapping = aes(x, y)) +
 ::: flex
 ::: w-40
 <br><br>
-$$
-\begin{aligned}
+$$\begin{aligned}
 D^{(3)} &= \begin{bmatrix} 
 -1 & 3 & -3 & 1  & & \\ 
  & -1 & 3 & -3 &1 & \\
@@ -520,8 +627,7 @@ D^{(3)} &= \begin{bmatrix}
 \end{bmatrix} \\ \\
 &= D^{(1)}D^{(2)}\\ \\
 &\in \mathbb{R}^{(n-k-1)\times n}
-\end{aligned}
-$$
+\end{aligned}$$
 :::
 
 ::: w-60
@@ -544,31 +650,25 @@ ggplot(mapping = aes(x, y)) +
 
 ## Estimation algorithm
 
-$$
-\minimize_\theta\; \eta^{\mathsf{T}}\exp(\theta) - 
-\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1
-$$
+$$\minimize_\theta\; \eta^{\mathsf{T}}\exp(\theta) - 
+\mathbf{y}^{\mathsf{T}}\theta + \lambda\Vert D^{(k+1)}\theta\Vert_1$$
 
 ## Estimation algorithm
 
-$$
-\minimize_{\theta,\ {\color{BurntOrange} \alpha}}\; 
+$$\minimize_{\theta,\ {\color{BurntOrange} \alpha}}\; 
 \eta^{\mathsf{T}}\exp(\theta) - 
 \mathbf{y}^{\mathsf{T}}\theta + 
 \lambda\Vert D^{(1)}{\color{BurntOrange} \alpha}\Vert_1\quad
-{\color{BurntOrange} \textrm{subject to}\quad \alpha = D^{(k)}\theta}
-$$
+{\color{BurntOrange} \textrm{subject to}\quad \alpha = D^{(k)}\theta}$$
 
 
 ## Estimation algorithm
 
-$$
-\minimize_{\theta,\ \alpha}\; 
+$$\minimize_{\theta,\ \alpha}\; 
 \eta^{\mathsf{T}}\exp(\theta) - 
 \mathbf{y}^{\mathsf{T}}\theta + 
 \lambda\Vert D^{(1)} \alpha\Vert_1\quad
-\textrm{subject to}\quad \alpha = D^{(k)}\theta
-$$
+\textrm{subject to}\quad \alpha = D^{(k)}\theta$$
 
 <br>
 <hr>
@@ -576,27 +676,26 @@ $$
 
 Alternating direction method of multipliers (ADMM)
 
-$$
-\begin{aligned}
-\theta &\longleftarrow \argmin_\theta\ \eta^{\mathsf{T}}\exp(\theta) - 
+$$\begin{aligned}
+\theta 
+&\longleftarrow \argmin_\theta\ \eta^{\mathsf{T}}\exp(\theta) - 
 \mathbf{y}^{\mathsf{T}}\theta + 
+\frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
+\alpha 
+&\longleftarrow \argmin_\alpha\ \lambda\Vert D^{(1)} \alpha \Vert_1 +
   \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
-\alpha &\longleftarrow \argmin_\alpha\ \lambda\Vert D^{(1)} \alpha \Vert_1 +
-  \frac{\rho}{2}\Vert D^{(k)}\theta - \alpha + u \Vert_2^2 \\
-u &\longleftarrow u + D^{(k)}\theta - \alpha
-\end{aligned}
-$$
+u 
+&\longleftarrow u + D^{(k)}\theta - \alpha
+\end{aligned}$$
 
 
 ## Estimation algorithm
 
-$$
-\minimize_{\theta,\ \alpha}\; 
+$$\minimize_{\theta,\ \alpha}\; 
 \eta^{\mathsf{T}}\exp(\theta) - 
 \mathbf{y}^{\mathsf{T}}\theta + 
 \lambda\Vert D^{(1)} \alpha\Vert_1\quad
-\textrm{subject to}\quad \alpha = D^{(k)}\theta
-$$
+\textrm{subject to}\quad \alpha = D^{(k)}\theta$$
 
 <br>
 <hr>
@@ -604,13 +703,13 @@ $$
 
 Alternating direction method of multipliers (ADMM)
 
-$$
-\begin{aligned}
-\theta &\longleftarrow  {\color{Cerulean}\textrm{Proximal Newton / Fisher Scoring}} \\
-\alpha &\longleftarrow  {\color{BurntOrange}\textrm{Fused Lasso Signal Approximator}} \\
+$$\begin{aligned}
+\theta &\longleftarrow  
+\Big[{\color{Cerulean}\textrm{Proximal Newton / Fisher Scoring}}\Big] \\
+\alpha &\longleftarrow  
+\Big[{\color{BurntOrange}\textrm{Fused Lasso Signal Approximator}}\Big] \\
 u &\longleftarrow u + D^{(k)}\theta - \alpha
-\end{aligned}
-$$
+\end{aligned}$$
 
 . . .
 
@@ -819,9 +918,9 @@ plot(can_cv) +
 :::
 :::
 
-::: {.fragment}
+::: {.fragment style="text-wrap: nowrap;"}
 The solution is an element of the space of [_discrete splines of order $k$_]{.tertiary} 
-(Tibshirani, 2020)
+[Tibshirani 2020](https://www.stat.berkeley.edu/~ryantibs/papers/dspline.pdf)
 
 * Lets us interpolate (and extrapolate) to off-observation points
 * Lets us handle uneven spacing
@@ -853,6 +952,7 @@ The solution is an element of the space of [_discrete splines of order $k$_]{.te
 ::: {.w-60}
 
 ::: {.r-stack}
+
 ::: {.fragment}
 ```{r}
 #| label: duotang
@@ -896,27 +996,28 @@ can_props_smoothed %>%
   scale_fill_viridis_d(name = "")
 ```
 :::
+
 ::: {.fragment}
 ```{r}
 #| label: show-delay-distns
 #| out-width: "800px"
 #| out-height: "600px"
 #| fig-height: 4
-#| fig-width: 5
+#| fig-width: 6
 can_pred_class <- read_rds("src/can_pred_class.rds")
 delay_distns_can <- read_rds("src/delay-distns-byvar.rds") |> # in rtestim/vignettes
   filter(para == "SI", type %in% unique(can_pred_class$var))
 delay_distns_can |>
   rowwise() |>
-  mutate(probability = list(discretize_gamma(0:20, shape, scale))) |>
+  mutate(Probability = list(discretize_gamma(0:20, shape, scale))) |>
   ungroup() |>
-  select(type, probability) |>
-  unnest(probability) |>
+  select(type, Probability) |>
+  unnest(Probability) |>
   group_by(type) |>
-  mutate(delay = row_number() - 1) |>
-  ggplot(aes(delay, probability, colour = type)) +
-  geom_line() + 
-  scale_color_brewer(palette = "Set1", name = "") +
+  mutate(Delay = row_number() - 1) |>
+  ggplot(aes(Delay, Probability, fill = type)) +
+  geom_bar(stat = "identity", position = "dodge") + 
+  scale_fill_brewer(palette = "Set1", name = "") +
   scale_y_continuous(expand = expansion(c(0, 0.05))) +
   theme(plot.background = element_rect(fill = theme_white, colour = theme_white))
 ```
@@ -978,11 +1079,14 @@ ggplot(can_tvar_ci, aes(x = Date)) +
   theme(legend.position = "bottom")
 ```
 
+
+
 ## Summary and collaborators
 
 ::: flex
 
-::: w-40
+::: {.w-50 style="text-wrap: nowrap;"}
+
 [Contributions]{.secondary}
 
 * Framework for $R_t$ estimation
@@ -1002,7 +1106,7 @@ ggplot(can_tvar_ci, aes(x = Date)) +
 
 :::
 
-::: {.w-60 .fragment}
+::: {.w-50 .fragment}
 
 [Collaborators and funding]{.secondary}
 
