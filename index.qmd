@@ -433,7 +433,7 @@ y_t\ |\ y_{t-1},\ldots,y_{1} &\sim \textrm{Poisson}(R_t\eta_t).
 * So everybody smooths it.
 
 ::: {.fragment .box-text .absolute top=50}
-* This isn't going to give you "$R_t$", because you didn't use incident infections.
+* This won't give you "$R_t$", because you didn't use incident infections.
 
 * At least, the timing is wrong, because the observable happened _after_ infection.
 

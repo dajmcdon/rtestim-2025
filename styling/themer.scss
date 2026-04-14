@@ -1,8 +1,7 @@
 /*-- scss:defaults --*/
 
 // import google fonts
-@import url('https://fonts.googleapis.com/css2?family=Gilda+Display&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=National+Park:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
 
 $light-colors: (
   "ubclblue": #6495ed,
@@ -30,8 +29,8 @@ $colors: map-merge($light-colors, $dark-colors);
 $primary: theme-color("ubcblue");
 $secondary: theme-color("ubclblue");
 $tertiary: theme-color("claret");
-$font-family-sans-serif: 'National Park', 'Red Hat Display', sans-serif;
-$presentation-heading-font: 'Gilda Display', serif;
+$font-family-sans-serif: 'Red Hat Display', 'Source Sans Pro', sans-serif;
+$presentation-heading-font: 'EB Garamond', serif;
 // $presentation-font-size-root: 40px;
 $body-bg: theme-color("white");
 $body-color: theme-color("black"); // darker version of primary
